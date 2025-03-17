@@ -208,6 +208,8 @@ void send_cmd_ack_hanlder(void)
 
     break;
 
+
+
   }
 
 }
@@ -417,26 +419,20 @@ void receive_data_from_mainboard(uint8_t *pdata)
 static void rx_answer_data_form_mainboard(uint8_t *pdata)
 {
     
-    switch(pdata[2]){
+    switch(pdata[3]){
 
     case ack_power : //power_on 
-    if(pdata[3]==0x01){ //power on or power off cmd.
+    if(pdata[4]==0x01){ //power on or power off cmd.
         
-
-        gpro_t.receive_copy_cmd = 1;
-
-
         power_on_handler();
         run_t.gPower_On = power_on;
 
      }
      else{ //power offf
 
-        gpro_t.receive_copy_cmd = 2;
-
         run_t.gPower_On = power_off;
-        run_t.gRunCommand_label =RUN_NULL;
-
+        run_t.power_off_flag=0;
+       
 
      }
 
@@ -444,7 +440,7 @@ static void rx_answer_data_form_mainboard(uint8_t *pdata)
 
     case ack_ptc:
 
-    if(pdata[3]==1){
+    if(pdata[4]==1){
 
         gpro_t.receive_copy_cmd = 1;
     }
@@ -459,7 +455,7 @@ static void rx_answer_data_form_mainboard(uint8_t *pdata)
 
     case ack_plasma:
 
-    if(pdata[3]==1){
+    if(pdata[4]==1){
 
         gpro_t.receive_copy_cmd = 1;
     }
@@ -484,12 +480,9 @@ static void rx_answer_data_form_mainboard(uint8_t *pdata)
 
     case ack_wifi: // link wifi command
 
-      if(pdata[3] == 0x01){  // link wifi
+      if(pdata[4] == 0x01){  // link wifi
 
-//           gpro_t.gTimer_wifi_led_blink_time =0;
-//           run_t.wifi_led_fast_blink_flag =1;
-//           gpro_t.wifi_link_net_success = 0;
-//           gpro_t.get_beijing_time_flag = 0;
+
 
       }
       else if(pdata[3] == 0x0){ //don't link wifi
@@ -508,11 +501,11 @@ static void rx_answer_data_form_mainboard(uint8_t *pdata)
     case ack_with_buzzer:
         if(pdata[4] == 1){  //buzzer answer command
 
-            gpro_t.receive_copy_cmd = 1;
+           
 
         }
         else{
-          gpro_t.receive_copy_cmd = 2;
+         
 
 
         }

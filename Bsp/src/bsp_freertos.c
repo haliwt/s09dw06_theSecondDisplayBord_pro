@@ -358,7 +358,7 @@ static void vTaskRunPro(void *pvParameters)
        }
 
    
-      send_cmd_ack_hanlder();
+    //  send_cmd_ack_hanlder();
 
 	  vTaskDelay(10);
      

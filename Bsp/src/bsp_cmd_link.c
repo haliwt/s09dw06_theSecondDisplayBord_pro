@@ -8,15 +8,10 @@
 #define HAS_DATA 					0x01
 
 
-static void SendFrame(uint8_t *frame, uint8_t length) ;
-static uint8_t PrepareFrame(uint8_t cmd, uint8_t *data, uint8_t dataLength,uint8_t frameType) ;
-static void SendCommand(uint8_t cmd, uint8_t *data, uint8_t dataLength,uint8_t frameType) ;
-static uint8_t PrepareAnswerFrame(uint8_t cmd, uint8_t *data, uint8_t dataLength, uint8_t frameType);
-
-static void SendCmd_Answer(uint8_t cmd, uint8_t *data, uint8_t dataLength,uint8_t frameType);
 
 
-volatile static uint8_t transOngoingFlag; //interrupt Transmit flag bit , 1---stop,0--run
+
+volatile  uint8_t transOngoingFlag; //interrupt Transmit flag bit , 1---stop,0--run
 
 static void sendUartData(uint8_t *data, uint8_t size);
 uint8_t outputBuf[8];
@@ -42,103 +37,137 @@ static void sendUartData(uint8_t *data, uint8_t size)
     }
 }
 
-/****************************************************************************************************
-    * Function Name: SendFrame
-    * Function: 发送数据帧
-    * Input Ref: 数据帧内容和长度
-****************************************************************************************************/
-static void SendFrame(uint8_t *frame, uint8_t length) 
+/*********************************************************
+ * 
+ * Function Name:void SendData_Buzzer(void)
+ * Function: 
+ * Input Ref:NO
+ * Return Ref:NO
+ * 
+*********************************************************/
+void SendData_Buzzer(void)
 {
-    if (length > 0) {
-        while (transOngoingFlag); // 等待上一次传输完成
-        transOngoingFlag = 1; // 设置传输标志
-        HAL_UART_Transmit_IT(&huart1, frame, length); // 启动传输
-    }
+	
+    outputBuf[0]=FRAME_HEADER; //display board head = 0xA5
+	outputBuf[1]= DEVICE_NUMBER; //display device Number:is 0x01
+	outputBuf[2]=0x06; // command type = 0x06 ->buzzer sound open or not
+	outputBuf[3]=0x01; // command order -> 01 - buzzer sound done, 00- don't buzzer sound 
+	outputBuf[4]=NO_DATA; // data is length: 00 ->don't data 
+	outputBuf[5]=FRAME_END; // frame of end code -> 0xFE.
+	
+	outputBuf[6] = bcc_check(outputBuf,6);
+	transferSize=7;
+	sendUartData(outputBuf, transferSize);
+	
+//	if(transferSize)
+//	{
+//		while(transOngoingFlag);
+//		transOngoingFlag=1;
+//		HAL_UART_Transmit_IT(&huart1,outputBuf,transferSize);
+//	}
+	
 }
-/****************************************************************************************************
-    * Function Name: PrepareFrame
-    * Function: 准备数据帧
-    * Input Ref: 设备号、命令类型、数据、数据长度
-    * Output Ref: 数据帧长度
-****************************************************************************************************/
-static uint8_t PrepareFrame(uint8_t cmd, uint8_t *data, uint8_t dataLength,uint8_t frameType) 
+/*********************************************************
+ * 
+ * Function Name:void SendData_Set_Command(uint8_t cmd,uint8_t cmddata)
+ * Function: 
+ * Input Ref:cmd- command , dmddata-> command of mode .
+ * Return Ref:NO
+ * 
+*********************************************************/
+void SendData_Set_Command(uint8_t cmd,uint8_t cmddata)
+
 {
-    outputBuf[0] = 0xA5; //display board帧头
-    outputBuf[1] = 0x02;//deviceId; // 设备号
-    outputBuf[2] = cmd; // 
-    outputBuf[3] = frameType;//命令类型
-    outputBuf[4] = dataLength;
-    if(dataLength > 0){
-  
-        memcpy(&outputBuf[5], data, dataLength); // 
-        outputBuf[5 + dataLength] = 0xFE; // 帧尾
-        outputBuf[6 + dataLength] = bcc_check(outputBuf, 6 + dataLength); // BCC 校验
-        return 7 + dataLength; //拷贝
-
-    }
-    else{
-
-           outputBuf[5] = 0xFE; // 帧尾
-           outputBuf[6] = bcc_check(outputBuf, 6); // BCC 校验
-           return 7; // 
+	outputBuf[0]=FRAME_HEADER; //display board head = 0xA5
+	outputBuf[1]= DEVICE_NUMBER; //second display device Number:is 0x02
+	outputBuf[2]= cmd; // command type = 0x06 ->buzzer sound open or not
+	outputBuf[3]= cmddata; // command order -> 01 - buzzer sound done, 00- don't buzzer sound 
+	outputBuf[4]=NO_DATA; // data is length: 00 ->don't data 
+	outputBuf[5]=FRAME_END; // frame of end code -> 0xFE.
+    outputBuf[6] = bcc_check(outputBuf,6);
 
 
-    }
-   
-}
-
-/******************************************************************************
-    * Function Name: PrepareFrame
-    * Function: 准备数据帧
-    * Input Ref: 命令、数据、数据长度和帧类型
-    * Output Ref: 数据帧长度
-******************************************************************************/
-static uint8_t PrepareAnswerFrame(uint8_t cmd, uint8_t *data, uint8_t dataLength, uint8_t frameType)
-{
-    outputBuf[0] = 0xA5; // 帧头
-    outputBuf[1] = 0x02; // 设备号
-    outputBuf[2] = 0xFF; // 设备号
-    outputBuf[3] = cmd;  // 命令类型
-    outputBuf[4] = frameType ; //帧类型：00-open/clouse ,0x01- open/link/turn on 0x02-not-ai-mode , 0x10--多指令，0x0f:数据不是指令。 0xff：主板和显示板，通讯测试模式
-    outputBuf[5] = dataLength; // 数据长度
-
-    if (dataLength > 0) {
-        memcpy(&outputBuf[6], data, dataLength); // 拷贝数据
-         outputBuf[7+ dataLength] = 0xFE; // 帧尾
-         outputBuf[8 + dataLength] = bcc_check(outputBuf, 8 + dataLength); // BCC 校验
-          
-        return 9 + dataLength; // 返回帧长度
-    }
-    else{
-
-        outputBuf[6] = 0xFE;
-        outputBuf[7] = bcc_check(outputBuf, 7); // BCC 校验
-
-        return 8 ; // 返回帧长度
-    }
-
-}
-/****************************************************************************************************
-    * Function Name: SendCommand
-    * Function: 发送通用命令
-    * Input Ref: 设备号、命令类型、数据、数据长度
-****************************************************************************************************/
-static void SendCmd_Answer(uint8_t cmd, uint8_t *data, uint8_t dataLength,uint8_t frameType) 
-{
-    uint8_t frameLength = PrepareAnswerFrame(cmd, data, dataLength,frameType); // 准备数据帧
-    SendFrame(outputBuf, frameLength); // 发送数据
+     transferSize=7;
+    sendUartData(outputBuf, transferSize);
+	
 }
 
+/*********************************************************
+ * 
+ * Function Name:void SendData_Tx_Data(uint8_t dcmd,uint8_t ddata)
+ * Function: 
+ * Input Ref:cmd- command , dmddata-> command of mode .
+ * Return Ref:NO
+ * 
+*********************************************************/
+void SendData_Tx_Data(uint8_t dcmd,uint8_t ddata)
 
-/****************************************************************************************************
-    * Function Name: SendCommand
-    * Function: 发送通用命令
-    * Input Ref: 设备号、命令类型、数据、数据长度
-****************************************************************************************************/
-static void SendCommand(uint8_t cmd, uint8_t *data, uint8_t dataLength,uint8_t frameType) 
 {
-    uint8_t frameLength = PrepareFrame(cmd, data, dataLength,frameType); // 准备数据帧
-    SendFrame(outputBuf, frameLength); // 发送数据
+	outputBuf[0]=FRAME_HEADER; //display board head = 0xA5
+	outputBuf[1]= DEVICE_NUMBER; //display device Number:is 0x01
+	outputBuf[2]= dcmd; // command type = 0x06 ->buzzer sound open or not
+	outputBuf[3]= 0x0f; //  0x0f -> is data ,don't command.
+	outputBuf[4]=0x01; // data is length: 00 ->don't data ,0x01 -> has one data.
+    outputBuf[5]=ddata; // frame of end code -> 0xFE.
+    outputBuf[6]=FRAME_END; // frame of end code -> 0xFE.
+    outputBuf[7] = bcc_check(outputBuf,7);
+
+
+	transferSize=8;
+	sendUartData(outputBuf, transferSize);
+		
+	
+}
+/*********************************************************
+ * 
+ * Function Name:
+ * Function:
+ * Input Ref:NO
+ * Return Ref:NO
+ * 
+*********************************************************/
+void SendData_Temp_Data(uint8_t tdata)
+{
+
+    outputBuf[0]=FRAME_HEADER; //display board head = 0xA5
+	outputBuf[1]= DEVICE_NUMBER; //display device Number:is 0x01
+	outputBuf[2]=0x1A; // command type = 0x1A -> temperature of value 
+	outputBuf[3]=0x0f; // command order -> 0x0f -> is data , don't order.
+	outputBuf[4]=0x01; // data is length: 00 ->don't data 
+	outputBuf[5]=tdata; // frame of end code -> 0xFE.
+	outputBuf[6]=FRAME_END; // frame of end code -> 0xFE.
+    outputBuf[7] = bcc_check(outputBuf,7);
+		
+	transferSize=8;
+	sendUartData(outputBuf, transferSize);
+		
+
+}
+
+/*********************************************************
+ * 
+ * Function Name:
+ * Function:
+ * Input Ref:NO
+ * Return Ref:NO
+ * 
+*********************************************************/
+void SendData_SetTemp_Data(uint8_t tdata)
+{
+
+    outputBuf[0]=FRAME_HEADER; //display board head = 0xA5
+	outputBuf[1]= DEVICE_NUMBER; //display device Number:is 0x02
+	outputBuf[2]=0x2A; // command type = 0x1A -> temperature of value 
+	outputBuf[3]=0x0f; // command order -> 0x0f -> is data , don't order.
+	outputBuf[4]=0x01; // data is length: 00 ->don't data 
+	outputBuf[5]=tdata; // frame of end code -> 0xFE.
+	outputBuf[6]=FRAME_END; // frame of end code -> 0xFE.
+    outputBuf[7] = bcc_check(outputBuf,7);
+		
+	transferSize=8;
+	sendUartData(outputBuf, transferSize);
+		
+
 }
 
 /****************************************************************************************************
@@ -167,56 +196,20 @@ void SendData_PowerOnOff(uint8_t index)
 	//		HAL_UART_Transmit_IT(&huart1,outputBuf,transferSize);
 	//	}
 }
-/****************************************************************************************************
-    * Function Name: SendData_Buzzer
-    * Function: 发送蜂鸣器命令
-    * Input Ref: 无
-****************************************************************************************************/
-void SendData_Buzzer(void) {
-    //uint8_t data[1] = {0x01}; // 蜂鸣器状态
-    SendCommand(0x06,0,0,1); // 发送命令
-}
-
-/****************************************************************************************************
-    * Function Name: SendData_Buzzer_Has_Ack
-    * Function: 发送带应答的蜂鸣器命令
-    * Input Ref: 无
-****************************************************************************************************/
-void SendData_Buzzer_Has_Ack(void) {
-   // uint8_t data[1] = {0x01}; // 蜂鸣器状态
-    SendCommand(0x16,0,0,1); // 发送命令
-}
-
-/****************************************************************************************************
-    * Function Name: SendData_Set_Command
-    * Function: 发送设置命令
-    * Input Ref: 命令 (cmd) 和数据 (data)
-****************************************************************************************************/
-void SendData_Set_Command(uint8_t cmd, uint8_t frameType) {
-   // uint8_t dataArray[1] = {data}; // 命令数据
-    SendCommand(cmd,0,0,frameType); // 发送命令
-}
-
-/****************************************************************************************************
-    * Function Name: SendData_Temp_Data
-    * Function: 发送温度数据
-    * Input Ref: 温度值 (tdata)
-****************************************************************************************************/
-void SendData_Temp_Data(uint8_t tdata) 
-{
-    uint8_t data[1] = {tdata}; // 温度数据
-    SendCommand(0x1A,data,1,0x0F); // 发送命令
-}
 
 /****************************************************************************************************
     * Function Name: SendWifiData_Answer_Cmd
     * Function: 发送 WiFi 应答命令
     * Input Ref: 命令 (cmd) 和数据 (data)
 ****************************************************************************************************/
-void SendWifiData_Answer_Cmd(uint8_t cmd, uint8_t frameType) {
-   // uint8_t dataArray[1] = {data}; // 命令数据
-  //  SendCommand(cmd,0,0,frameType); // 发送命令
-    SendCmd_Answer(cmd,0,0,frameType);
+void SendWifiData_Answer_Cmd(uint8_t cmd, uint8_t frameType) 
+{
+  
+}
+void SendData_Buzzer_Has_Ack(void)
+{
+
+    
 }
 
 /****************************************************************************************************

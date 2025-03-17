@@ -47,7 +47,8 @@ typedef enum{
     check_ack_fan_warning,
     check_ack_buzzer,
     check_ack_dry_notice_on,
-    check_ack_dry_notice_off
+    check_ack_dry_notice_off,
+    
         
 }message_info;
 
