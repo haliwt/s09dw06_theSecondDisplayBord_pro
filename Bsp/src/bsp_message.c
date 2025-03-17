@@ -230,6 +230,26 @@ void receive_data_from_mainboard(uint8_t *pdata)
 
      break;
 
+     case  power_cmd:
+           if(pdata[3] == 0x01){ //power on
+
+            run_t.gPower_On = power_on;
+            run_t.gRunCommand_label =RUN_NULL;
+            //gpro_t.receive_copy_cmd = 1;
+            power_on_handler();
+            
+           }
+           else if(pdata[3] == 0x0){ //power off
+
+            run_t.gPower_On = power_off;
+            run_t.gRunCommand_label =RUN_NULL;
+            //gpro_t.receive_copy_cmd = 2;
+           // power_off_handler();
+           
+           }
+
+     break;
+
      case dry_cmd: //PTC打开关闭指令
 
      if(pdata[3] == 0x01){
