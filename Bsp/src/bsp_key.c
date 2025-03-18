@@ -169,43 +169,15 @@ void set_timer_fun_led_blink(void)
   
        TM1639_Write_4Bit_Time_sync_close(run_t.hours_two_decade_bit,run_t.hours_two_unit_bit, run_t.minutes_one_decade_bit,run_t.minutes_one_unit_bit,time_smg_blink) ; 
     
-       //ai_ico_fast_blink();
+       
     
    }
 
    }
-   if(run_t.gPower_On == power_off){
-      LED_AI_OFF();
-       
-   }
-   
-
+  
 }
 
-void  ai_ico_fast_blink(void)
-{
 
-   static uint8_t ai_led_blink;
-    if(gpro_t.set_timer_timing_doing_value==1){
-    if(run_t.gTimer_smg_blink_times > 100){
-
-        run_t.gTimer_smg_blink_times=0;
-        ai_led_blink ++;
-
-        if(ai_led_blink ==1){
-        
-              LED_AI_ON();
-         }
-          else{
-            ai_led_blink =0;
-            LED_AI_OFF();
-       
-           }
-          
-       }
-  }
-
-}
 
 /****************************************************************
 	*

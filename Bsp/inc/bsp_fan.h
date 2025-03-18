@@ -7,10 +7,10 @@
 
 
 
-void led_mouse_on(void);
-void led_mouse_off(void);
 
 
+
+void display_icon_function(void);
 
 
 

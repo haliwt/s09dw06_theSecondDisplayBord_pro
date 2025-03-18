@@ -159,47 +159,29 @@ static void vTaskRunPro(void *pvParameters)
     while(1)
     {
 
-        if(AI_KEY_VALUE() == KEY_DOWN &&   key_t.key_ai_flag < 10 && run_t.gPower_On == power_on){
-        	key_t.key_ai_flag =20 ;
-          //  SendData_Buzzer();        
+    if(AI_KEY_VALUE() == KEY_DOWN &&   key_t.key_wifi_flag <60 && run_t.gPower_On == power_on){
+        	key_t.key_wifi_flag++; 
         
-         if(run_t.ai_model_flag == AI_MODE){
-   		  run_t.ai_model_flag = NO_AI_MODE;
-          gpro_t.ai_mode_set_flag= 2;
-           LED_AI_OFF();
-
-   		}
-   		else{
-   		   run_t.ai_model_flag = AI_MODE;
-            LED_AI_ON();
-            gpro_t.ai_mode_set_flag= 1;
-            }
-             
-        }
-        else if(AI_KEY_VALUE() == KEY_UP &&  key_t.key_ai_flag ==21) key_t.key_ai_flag =0;
-
-        if(key_t.key_ai_flag ==20){
-            //SendData_Buzzer(); 
-            SendData_Buzzer_Has_Ack();
-		     gpro_t.send_ack_cmd = check_ack_buzzer;
-		     gpro_t.gTimer_again_send_power_on_off =0;
-
-            key_t.key_ai_flag++;
-
+         if(key_t.key_wifi_flag >19){
+          key_t.key_wifi_flag=80;
+          run_t.wifi_led_fast_blink=1;
+          run_t.wifi_connect_state_flag = wifi_connect_null;
+          run_t.gTimer_wifi_connect_counter =0; //120s counte start
+          SendData_Buzzer();        
          }
-
-
-     if(key_t.key_power_flag ==1){ //&& POWER_KEY_VALUE() ==KEY_UP){
+   
+        }
+	
+       //KEY BY INTERRUPT GPIO
+       if(key_t.key_power_flag ==1){ //&& POWER_KEY_VALUE() ==KEY_UP){
 			key_t.key_power_flag ++;
 
 					if(run_t.gPower_On == power_off){
-					gpro_t.send_ack_cmd = check_ack_power_on;
-					gpro_t.gTimer_again_send_power_on_off =0;
-					SendData_PowerOnOff(1);//power on
+		
+					  SendData_PowerOnOff(1);//power on
 				}
 				else{
-					gpro_t.send_ack_cmd =  check_ack_power_off;
-					gpro_t.gTimer_again_send_power_on_off =0;
+		
 					SendData_PowerOnOff(0);//power off
 
 				}
@@ -207,43 +189,23 @@ static void vTaskRunPro(void *pvParameters)
 			else if(key_t.key_mode_flag ==1){ //&& MODEL_KEY_VALUE()==KEY_UP){
 				 key_t.key_mode_flag ++;
 				 SendData_Buzzer();//SendData_Buzzer_Has_Ack();
-				//gpro_t.send_ack_cmd = ack_buzzer_sound;
-				//gpro_t.gTimer_again_send_power_on_off =0;
+	
 				mode_key_fun();
 			}
 			else if(key_t.key_dec_flag ==1){// && DEC_KEY_VALUE()==KEY_UP){
 				 key_t.key_dec_flag ++;
-				SendData_Buzzer_Has_Ack();
+				SendData_Buzzer();//SendData_Buzzer_Has_Ack();
 				gpro_t.send_ack_cmd = check_ack_buzzer;
 				gpro_t.gTimer_again_send_power_on_off =0;
 				key_dec_fun();
 			}
 			else if(key_t.key_add_flag ==1){ // && ADD_KEY_VALUE()==KEY_UP){
 				 key_t.key_add_flag ++;
-				 SendData_Buzzer_Has_Ack();
+				 SendData_Buzzer();//SendData_Buzzer_Has_Ack();
 				gpro_t.send_ack_cmd = check_ack_buzzer;
 				gpro_t.gTimer_again_send_power_on_off =0;
 				key_add_fun();
 			}
-//			else if(key_t.key_ai_flag ==1){ // && AI_KEY_VALUE()==KEY_UP){
-//				 key_t.key_ai_flag =0;
-//				if(run_t.ai_model_flag == AI_MODE){
-//        		  run_t.ai_model_flag = NO_AI_MODE;
-//                  SendData_Buzzer();
-//        		  LED_AI_OFF();
-//				   ///gpro_t.send_ack_cmd = ack_ai_off;
-//				   //gpro_t.gTimer_again_send_power_on_off =0;
-//				  //SendData_Set_Command(ai_cmd,0x0); //
-//        		}
-//        		else{
-//        		   run_t.ai_model_flag = AI_MODE;
-//                   SendData_Buzzer();
-//        		   LED_AI_ON();
-//        		   //SendData_Set_Command(ai_cmd,0x01); //
-//				   //gpro_t.send_ack_cmd = ack_ai_on;
-//				   //gpro_t.gTimer_again_send_power_on_off =0;
-//        		}
-//			}
 			else if(key_t.key_plasma_flag ==1){// && PLASMA_KEY_VALUE()==KEY_UP){
 				 key_t.key_plasma_flag ++;
 
@@ -273,7 +235,7 @@ static void vTaskRunPro(void *pvParameters)
 
              if(gpro_t.set_timer_timing_doing_value==0){
 				 if(run_t.gDry ==0){
-                    SendData_Set_Command(dry_cmd,0x01); //
+                    SendData_Buzzer();//SendData_Set_Command(dry_cmd,0x01); //
         		   run_t.gDry =1;
                    gpro_t.key_set_dry_flag = 0;
         		   LED_DRY_ON();
@@ -282,7 +244,7 @@ static void vTaskRunPro(void *pvParameters)
         		   
         	   }
         	   else{
-                   SendData_Set_Command(dry_cmd,0x00); //
+                   SendData_Buzzer();//SendData_Set_Command(dry_cmd,0x00); //
         		   run_t.gDry = 0;
                    gpro_t.key_set_dry_flag = 1; //if gpro_t.key_set_dry_flag ==1,don't again open dry function.
         		   LED_DRY_OFF();
@@ -301,8 +263,7 @@ static void vTaskRunPro(void *pvParameters)
                    SendData_Set_Command(mouse_cmd,0x01); //
                    run_t.gMouse =1;
         		   LED_MOUSE_ON();
-        		  // gpro_t.send_ack_cmd = check_ack_mouse_on;
-        		  // gpro_t.gTimer_again_send_power_on_off =0;
+        		
                    
         		   
 				   }
@@ -311,8 +272,7 @@ static void vTaskRunPro(void *pvParameters)
                    SendData_Set_Command(mouse_cmd,0x00); //
                    run_t.gMouse = 0;
         		   LED_MOUSE_OFF();
-        		   //gpro_t.send_ack_cmd = ack_mouse_off;
-        		   //gpro_t.gTimer_again_send_power_on_off =0;
+        		 
                    }
                   
         		   
@@ -322,26 +282,22 @@ static void vTaskRunPro(void *pvParameters)
 
 	if(run_t.gPower_On == power_on){
 
-
-
-       if(run_t.ai_model_flag == AI_MODE && gpro_t.ai_mode_set_flag==1 ){
-          gpro_t.ai_mode_set_flag=20;
-
-          run_t.gMouse =1;
-          run_t.gDry =1;
-          run_t.gPlasma = 1;
-          LED_MOUSE_ON();
-          LED_DRY_ON();
-          LED_PLASMA_ON();
-          SendData_Set_Command(ai_cmd,0x01); 
-
+     if(key_t.key_wifi_flag==80){
+           
+        SendData_Set_Command(wifi_cmd,0x01);
+        osDelay(1000);
+        key_t.key_wifi_flag =0;
+	
 
        }
+
+   
        
        power_on_run_handler();
              
        Display_TimeColon_Blink_Fun();
        set_timer_fun_led_blink();
+       wifi_connect_state_fun(run_t.wifi_led_fast_blink);
        if(power_on_theFirst_times < 10 && gpro_t.set_timer_timing_doing_value==0){
          power_on_theFirst_times ++;
          Display_DHT11_Value();
@@ -399,65 +355,56 @@ static void vTaskStart(void *pvParameters)
             /* 接收到消息，检测那个位被按下 */
             if((ulValue & POWER_BIT_0 ) != 0)
             {
-                if(power_on_times == 0){
-                  power_on_times ++;
-                  run_t.gPower_On = power_off;
-                  
-
-                }
-                else
+              
+                  key_t.key_wifi_flag =0;
                   key_t.key_power_flag =1;
+                
                 
             }
             else if((ulValue & MODE_BIT_1 ) != 0){   /* 接收到消息，检测那个位被按下 */
             	 if(run_t.gPower_On == power_on){
-            	              key_t.key_mode_flag = 1;
+                    key_t.key_mode_flag = 1;
+                    key_t.key_wifi_flag =0;
 
-            	      }
+            	  }
                
              }
             else if((ulValue & DEC_BIT_2 ) != 0){
             	  if(run_t.gPower_On == power_on){
-            	                key_t.key_dec_flag =1;
-            	               // keyvalue = KEY_DEC_DOWN;
-            	                // bsp_PutKey(keyvalue);
-            	                 }
+                  key_t.key_dec_flag =1;
+                  key_t.key_wifi_flag =0;
+            
+                }
                
             }
             else if((ulValue & ADD_BIT_3 ) != 0){   /* 接收到消息，检测那个位被按下 */
             	 if(run_t.gPower_On == power_on){
-            	                   key_t.key_add_flag =1;
-            	                  //keyvalue = KEY_ADD_DOWN;
-            	                  //bsp_PutKey(keyvalue);
-            	                   }
+									 key_t.key_add_flag =1;
+									 key_t.key_wifi_flag =0;
+            	                  
+            	  }
 
 
             }
             else if((ulValue & PLASMA_BIT_5 ) != 0){   /* 接收到消息，检测那个位被按下 */
             	  if(run_t.gPower_On == power_on){
-            	                       key_t.key_plasma_flag =1;
-            	                  //keyvalue = KEY_PLASMA_DOWN;
-            	                   //bsp_PutKey(keyvalue);
-            	                   }
+                    key_t.key_plasma_flag =1;
+                    key_t.key_wifi_flag =0;
+            	                
+            	    }
             }
             else if((ulValue & DRY_BIT_6 ) != 0){   /* 接收到消息，检测那个位被按下 */
             	   if(run_t.gPower_On == power_on){
-            	                      key_t.key_dry_flag =1;
-            	                 // keyvalue = KEY_DRY_DOWN;
-            	                  //bsp_PutKey(keyvalue);
-            	                     }
+                    key_t.key_dry_flag =1;
+                    key_t.key_wifi_flag =0;
+            	               
+            	  }
              }
-//           else if((ulValue & AI_BIT_7 ) != 0){   /* 接收到消息，检测那个位被按下 */
-//        	   if(run_t.gPower_On == power_on){
-//        	                        key_t.key_ai_flag = 1;
-//        	                        //keyvalue = KEY_AI_DOWN;
-//        	                        //bsp_PutKey(keyvalue);
-//        	                    }
-//            }
             else if((ulValue & MOUSE_BIT_4 ) != 0){   /* 接收到消息，检测那个位被按下 */
             	 if(run_t.gPower_On == power_on){
                    
             	      key_t.key_mouse_flag =1;
+                    key_t.key_wifi_flag =0;
                      }
             	                 
             }
@@ -695,14 +642,14 @@ void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
          portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
             }
         }
-    ///    ENABLE_INT();
+  
    break;
 
      case DRY_KEY_Pin:
-      ///   DISABLE_INT();
+   
         if(DRY_KEY_VALUE() == KEY_DOWN){
 
-       if(run_t.ai_model_flag ==NO_AI_MODE && run_t.gPower_On == power_on){
+       if(run_t.gPower_On == power_on){
         xTaskNotifyFromISR(xHandleTaskStart,  /* 目标任务 */
                 DRY_BIT_6,     /* 设置目标任务事件标志位bit0  */
                 eSetBits,  /* 将目标任务的事件标志位与BIT_0进行或操作， 将结果赋值给事件标志位 */
@@ -712,13 +659,13 @@ void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
          portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
             }
         }
-    ///    ENABLE_INT();
+   
    break;
 
    case PLASMA_KEY_Pin:
       ///   DISABLE_INT();
        if(PLASMA_KEY_VALUE() == KEY_DOWN){
-        if(run_t.ai_model_flag ==NO_AI_MODE && run_t.gPower_On == power_on){
+        if(run_t.gPower_On == power_on){
         xTaskNotifyFromISR(xHandleTaskStart,  /* 目标任务 */
                 PLASMA_BIT_5,     /* 设置目标任务事件标志位bit0  */
                 eSetBits,  /* 将目标任务的事件标志位与BIT_0进行或操作， 将结果赋值给事件标志位 */
@@ -734,7 +681,7 @@ void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
    case MOUSE_KEY_Pin:
       ///   DISABLE_INT();
         if(MOUSE_KEY_VALUE() == KEY_DOWN){
-        if(run_t.ai_model_flag ==NO_AI_MODE && run_t.gPower_On == power_on){
+        if( run_t.gPower_On == power_on){
         xTaskNotifyFromISR(xHandleTaskStart,  /* 目标任务 */
                 MOUSE_BIT_4,     /* 设置目标任务事件标志位bit0  */
                 eSetBits,  /* 将目标任务的事件标志位与BIT_0进行或操作， 将结果赋值给事件标志位 */

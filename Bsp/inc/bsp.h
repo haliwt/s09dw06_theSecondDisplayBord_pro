@@ -19,6 +19,8 @@
 #include "bsp_display.h"
 #include "interrupt_manager.h"
 #include "bsp_delay.h"
+#include "bsp_wifi.h"
+#include "bsp_power.h"
 
 #include "bsp_key_app.h"
 #include "bsp_message.h"
@@ -61,6 +63,14 @@ typedef enum power_onoff_state_t{
 
 }power_onoff_stae;
 
+
+typedef enum{
+
+  no_ai_mode,
+  ai_mode
+
+}ai_mode_typedef;
+
 typedef struct _pro_t{
 
    
@@ -75,9 +85,11 @@ typedef struct _pro_t{
    uint8_t send_ack_cmd;
    uint8_t receive_copy_cmd;
    uint8_t key_set_dry_flag;
-   uint8_t ai_mode_set_flag;
+
 
    uint8_t g_time_disp_colon_flag;
+   uint8_t smartphone_app_timer_power_on_flag;
+   
 
 
 

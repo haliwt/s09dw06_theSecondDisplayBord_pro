@@ -342,37 +342,38 @@ static void Smg_DisplayFan_Level_Value_Fun(uint8_t fan_level)
 void Display_SmgTiming_Value(void)
 {
 
-  if(run_t.ai_model_flag == NO_AI_MODE){
+  
 
     switch(gpro_t.set_timer_timing_value_success){
 
 	   case TIMER_SUCCESS:
-	   if(run_t.gTimer_timer_timing_counter > 59){
-	    run_t.gTimer_timer_timing_counter =0;
-	
-		run_t.timer_dispTime_minutes -- ;
-	
-	    if(run_t.timer_dispTime_minutes <  0 ){
-			 
-		   run_t.timer_dispTime_hours -- ;
-		   run_t.timer_dispTime_minutes =59;
-         }
 
-		
-		
-		 if(run_t.timer_dispTime_hours < 0 ){
-		 
-			run_t.gTimer_timer_timing_counter = 57 ;
-			run_t.timer_dispTime_hours=0;
-			run_t.timer_dispTime_minutes=0;
-             
-	        gpro_t.send_ack_cmd = check_ack_power_off;//ack_power_off;
-			gpro_t.gTimer_again_send_power_on_off =0;
-			SendData_PowerOnOff(0);//power off
+	   
+			   if(run_t.gTimer_timer_timing_counter > 59){
+			    run_t.gTimer_timer_timing_counter =0;
 			
-	      }
-		    
-        }
+				run_t.timer_dispTime_minutes -- ;
+			
+			    if(run_t.timer_dispTime_minutes <  0 ){
+					 
+				   run_t.timer_dispTime_hours -- ;
+				   run_t.timer_dispTime_minutes =59;
+		         }
+
+				
+				
+				 if(run_t.timer_dispTime_hours < 0 ){
+				 
+					run_t.gTimer_timer_timing_counter = 57 ;
+					run_t.timer_dispTime_hours=0;
+					run_t.timer_dispTime_minutes=0;
+		             
+			        gpro_t.send_ack_cmd = check_ack_power_off;//ack_power_off;
+					gpro_t.gTimer_again_send_power_on_off =0;
+					SendData_PowerOnOff(0);//power off
+					
+			      }
+		}
 
         Display_Timing(run_t.timer_dispTime_hours,run_t.timer_dispTime_minutes);
         WorksTime_DonotDisplay_Fun();
@@ -381,7 +382,7 @@ void Display_SmgTiming_Value(void)
 
 		case TIMER_NO: //NO_AI_MODE by timer timing  auto be changed AI_MODE
 			
-        
+    
           if(run_t.gTimes_time_seconds > 59){
     		   run_t.gTimes_time_seconds=0;
     		 
@@ -399,41 +400,38 @@ void Display_SmgTiming_Value(void)
   
             Display_Timing(run_t.works_dispTime_hours,run_t.works_dispTime_minutes);
             Display_Works_Time_Fun();
-			
-          break;
+            Timer_Timing_Donot_Display();
+			break;
 
 	   	}
-
-
-
-
-
-  }
-  else{
-
-
-           if(run_t.gTimes_time_seconds > 59){
-    		   run_t.gTimes_time_seconds=0;
-    		 
-    		   run_t.works_dispTime_minutes++; //1 minute 
-    		
-    		   run_t.send_app_wokes_minutes_two++;
-    		   if(run_t.works_dispTime_minutes> 59){ //1 hour
-    		   run_t.works_dispTime_minutes=0;
-    		   run_t.works_dispTime_hours++;
-    		   if(run_t.works_dispTime_hours > 24){
-    		        run_t.works_dispTime_hours =0;
-    		   }
-    	      }
-           }
-  
-         Display_Timing(run_t.works_dispTime_hours,run_t.works_dispTime_minutes);
-         Timer_Timing_Donot_Display();
-
-  }
-  
-
 }
+
+//  	}
+//    else{
+
+
+//           if(run_t.gTimes_time_seconds > 59){
+//    		   run_t.gTimes_time_seconds=0;
+//    		 
+//    		   run_t.works_dispTime_minutes++; //1 minute 
+//    		
+//    		   run_t.send_app_wokes_minutes_two++;
+//    		   if(run_t.works_dispTime_minutes> 59){ //1 hour
+//    		   run_t.works_dispTime_minutes=0;
+//    		   run_t.works_dispTime_hours++;
+//    		   if(run_t.works_dispTime_hours > 24){
+//    		        run_t.works_dispTime_hours =0;
+//    		   }
+//    	      }
+//           }
+//  
+//         Display_Timing(run_t.works_dispTime_hours,run_t.works_dispTime_minutes);
+//         Timer_Timing_Donot_Display();
+
+//  }
+  
+
+
 
 
 

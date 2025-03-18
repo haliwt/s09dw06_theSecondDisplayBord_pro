@@ -30,7 +30,7 @@ void send_cmd_ack_hanlder(void)
     case check_ack_power_on:
 
 
-        
+         
      
           if(gpro_t.receive_copy_cmd == 0x01){
              gpro_t.receive_copy_cmd =0;
@@ -301,6 +301,22 @@ void receive_data_from_mainboard(uint8_t *pdata)
 
      break;
 
+	 case wifi_cmd:
+
+	         if(pdata[3] == 0x01){	//open
+			   
+			     run_t.wifi_led_fast_blink=1;
+                 run_t.wifi_connect_state_flag = wifi_connect_null;
+                 run_t.gTimer_wifi_connect_counter =0; //120s counte start
+	 
+			}
+			else if(pdata[3] == 0x0){ //close
+			 
+			}
+
+
+	 break;
+
 
 
 
@@ -386,16 +402,47 @@ void receive_data_from_mainboard(uint8_t *pdata)
 
             if(pdata[5] < 24){ //WT.EDIT 2024.11.23
 
-//            lcd_t.display_beijing_time_flag= 1;
-
-//            run_t.dispTime_hours  =  pdata[5];
-//            run_t.dispTime_minutes = pdata[6];
-//            run_t.gTimer_disp_time_seconds =  pdata[7];
+            run_t.display_beijing_time_flag= 1;
+          
+          run_t.works_dispTime_hours= pdata[5];// run_t.dispTime_hours  =  pdata[5];
+          run_t.works_dispTime_minutes =pdata[6];//run_t.dispTime_minutes = pdata[6];
+          run_t.gTimes_time_seconds =  pdata[7];//run_t.gTimer_disp_time_seconds =  pdata[7];
            }
 
 
         }
       break;
+
+	  case wifi_connect_data:
+	  	
+        if(pdata[3]==0x0F){ // 0xF is explain is data don't command.
+	    if(pdata[4] == 0x01){  //wifi connect is success.
+	  
+		     run_t.wifi_connect_state_flag = wifi_connect_success;
+	         run_t.wifi_led_fast_blink=0;
+			  
+	  
+			}
+			else if(pdata[4] == 0x0){ //close
+	  
+			   run_t.wifi_connect_state_flag = wifi_connect_null;
+	            run_t.wifi_led_fast_blink=0;
+			    run_t.display_beijing_time_flag =0;
+	  
+			}
+       }
+	  break;
+
+
+	  case timer_time_sync:
+
+	      
+
+          
+
+	  break;
+
+	  
 
         case 0x1D: //表示日期： 年，月，日
 

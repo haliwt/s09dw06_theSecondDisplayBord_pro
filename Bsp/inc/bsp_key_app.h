@@ -15,7 +15,7 @@ typedef struct {
 	uint8_t key_mode_flag;
 	uint8_t key_dec_flag;
 	uint8_t key_add_flag;
-	uint8_t key_ai_flag;
+	uint8_t key_wifi_flag;
 	uint8_t key_dry_flag;
 	uint8_t key_plasma_flag;
 	uint8_t key_mouse_flag;

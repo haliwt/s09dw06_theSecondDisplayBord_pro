@@ -135,12 +135,18 @@ typedef enum{
 
 
 
+//typedef enum{
+//
+//   NO_AI_MODE,
+//   AI_MODE,
+//
+//
+//}ai_mode_state;
+
 typedef enum{
-
-   NO_AI_MODE,
-   AI_MODE,
-
-}ai_mode_state;
+   wifi_connect_null,
+   wifi_connect_success
+}wifi_state_connect;
 
 
 
@@ -179,7 +185,7 @@ void disp_smg_blink_set_tempeature_value(void);
 
 void set_timer_fun_led_blink(void);
 
-void  ai_ico_fast_blink(void);
+
 
 
 

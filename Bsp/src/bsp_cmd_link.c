@@ -5,7 +5,7 @@
 #define DEVICE_NUMBER 				0x02
 #define FRAME_END 					0xFE
 #define NO_DATA 					0x00
-#define HAS_DATA 					0x01
+#define HAS_DATA 					0x0F
 
 
 

@@ -29,7 +29,7 @@ void power_on_handler(void)
 	run_t.gPower_On = power_on;
 	run_t.gRunCommand_label =RUN_POWER_ON;
 	run_t.power_off_flag = 0;
-	run_t.ai_model_flag=AI_MODE;
+	
 
 	gpro_t.gTimer_total_works_two_hours =0;
 
@@ -166,23 +166,23 @@ void mode_key_fun(void)
         if(run_t.temporary_timer_dispTime_hours >0 || run_t.temporary_timer_dispTime_minutes >0){
           gpro_t.set_timer_timing_value_success  = TIMER_SUCCESS;
           run_t.gTimer_timer_timing_counter = 0;
-           LED_AI_OFF();
-         run_t.ai_model_flag = NO_AI_MODE; //set up timer timing value 
+
+        
          run_t.timer_dispTime_hours = run_t.temporary_timer_dispTime_hours ;
          run_t.timer_dispTime_minutes = run_t.temporary_timer_dispTime_minutes ;
 
-         run_t.ai_model_flag =NO_AI_MODE;
-         gpro_t.ai_mode_set_flag=2;
+        
+   
 
           Display_Timing(run_t.timer_dispTime_hours,run_t.timer_dispTime_minutes);
          
 
          }
          else{
-            run_t.ai_model_flag =AI_MODE;
+           
             gpro_t.set_timer_timing_value_success  = 0;
-            LED_AI_ON();
-            gpro_t.ai_mode_set_flag=1;
+      
+       
 
          }
    	   }
@@ -310,7 +310,7 @@ void key_add_fun(void)
     case 1: //set timer timing value 
         SendData_Buzzer();
 
-       ai_ico_fast_blink();
+       //ai_ico_fast_blink();
         run_t.gTimer_key_timing =0;
     
         if(run_t.temporary_timer_dispTime_hours !=24)
@@ -348,7 +348,7 @@ void key_add_fun(void)
 
     run_t.minutes_one_unit_bit = run_t.temporary_timer_dispTime_minutes %10;
 
-    ai_ico_fast_blink();
+    //ai_ico_fast_blink();
  //   TM1639_Write_4Bit_Time(run_t.hours_two_decade_bit,run_t.hours_two_unit_bit, run_t.minutes_one_decade_bit,run_t.minutes_one_unit_bit,0) ; //timer is default 12 hours "12:00" 
     break;
 
@@ -397,7 +397,7 @@ void key_dec_fun(void)
     case 1: //set timer timing value
     SendData_Buzzer();
 
-    ai_ico_fast_blink();
+   // ai_ico_fast_blink();
     run_t.gTimer_key_timing =0;
     
     run_t.temporary_timer_dispTime_minutes =  run_t.temporary_timer_dispTime_minutes -30;
@@ -426,7 +426,7 @@ void key_dec_fun(void)
 
     run_t.minutes_one_unit_bit = run_t.temporary_timer_dispTime_minutes %10;
     
-    ai_ico_fast_blink();
+    //ai_ico_fast_blink();
     
   //  TM1639_Write_4Bit_Time(run_t.hours_two_decade_bit,run_t.hours_two_unit_bit, run_t.minutes_one_decade_bit,run_t.minutes_one_unit_bit,0) ; //timer is default 12 hours "12:00" 
 
@@ -546,7 +546,7 @@ void works_run_two_hours_handler(void)
 
 
     }
-
+	
     
 
 
