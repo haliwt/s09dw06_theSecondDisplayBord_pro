@@ -62,30 +62,30 @@ void send_cmd_ack_hanlder(void)
 
     case check_ack_ptc_on:
 
-       if(gpro_t.receive_copy_cmd == ack_ok_on){
-			gpro_t.receive_copy_cmd =0;
-			 gpro_t.send_ack_cmd = 0;
-
-    	}
-    	else if(gpro_t.receive_copy_cmd != 0 && gpro_t.gTimer_again_send_power_on_off >1){
-			  gpro_t.gTimer_again_send_power_on_off =0;
-			  SendData_Set_Command(dry_cmd,0x01); // link wifi of command .
-    	}
+//       if(gpro_t.receive_copy_cmd == ack_ok_on){
+//			gpro_t.receive_copy_cmd =0;
+//			 gpro_t.send_ack_cmd = 0;
+//
+//    	}
+//    	else if(gpro_t.receive_copy_cmd != 0 && gpro_t.gTimer_again_send_power_on_off >1){
+//			  gpro_t.gTimer_again_send_power_on_off =0;
+//			  SendData_Set_Command(dry_cmd,0x01); // link wifi of command .
+//    	}
 
 
      break;
 
     case check_ack_ptc_off:
 
-       if(gpro_t.receive_copy_cmd == 2){
-    	   gpro_t.receive_copy_cmd =0;
-    	   gpro_t.send_ack_cmd = 0;
-
-    	}
-    	else if(gpro_t.receive_copy_cmd != 0 && gpro_t.gTimer_again_send_power_on_off >1){
-    		gpro_t.gTimer_again_send_power_on_off =0;
-    		SendData_Set_Command(dry_cmd,0x0); // link wifi of command .
-    	}
+//       if(gpro_t.receive_copy_cmd == 2){
+//    	   gpro_t.receive_copy_cmd =0;
+//    	   gpro_t.send_ack_cmd = 0;
+//
+//    	}
+//    	else if(gpro_t.receive_copy_cmd != 0 && gpro_t.gTimer_again_send_power_on_off >1){
+//    		gpro_t.gTimer_again_send_power_on_off =0;
+//    		SendData_Set_Command(dry_cmd,0x0); // link wifi of command .
+//    	}
 
 
      break;
@@ -257,11 +257,11 @@ void receive_data_from_mainboard(uint8_t *pdata)
      if(pdata[3] == 0x01){
 
             run_t.gDry =1 ;//&& run_t.gPlasma ==1  && run_t.gUltransonic==1
-           
+            gpro_t.g_manual_shutoff_dry_flag = 0;
         }
         else if(pdata[3] == 0x0){
 
-          
+            gpro_t.g_manual_shutoff_dry_flag = 0;
             run_t.gDry =0;
           
 
@@ -439,6 +439,20 @@ void receive_data_from_mainboard(uint8_t *pdata)
 	      
 
           
+
+	  break;
+
+	  case 0x22: //Command ,set temperature compare dht11 result open or close
+
+	    if(pdata[3] == 0x01){ //command
+
+            
+
+        }
+		else if(pdata[3] == 0x01){ //
+
+
+		}
 
 	  break;
 

@@ -235,18 +235,18 @@ static void vTaskRunPro(void *pvParameters)
 
              if(gpro_t.set_timer_timing_doing_value==0){
 				 if(run_t.gDry ==0){
-                    SendData_Buzzer();//SendData_Set_Command(dry_cmd,0x01); //
+                   SendData_Set_Command(dry_cmd,0x01); //
         		   run_t.gDry =1;
-                   gpro_t.key_set_dry_flag = 0;
+                   gpro_t.g_manual_shutoff_dry_flag = 0;
         		   LED_DRY_ON();
         		   gpro_t.send_ack_cmd = check_ack_ptc_on;
         		   gpro_t.gTimer_again_send_power_on_off =0;
         		   
         	   }
         	   else{
-                   SendData_Buzzer();//SendData_Set_Command(dry_cmd,0x00); //
+                   SendData_Set_Command(dry_cmd,0x00); //
         		   run_t.gDry = 0;
-                   gpro_t.key_set_dry_flag = 1; //if gpro_t.key_set_dry_flag ==1,don't again open dry function.
+                   gpro_t.g_manual_shutoff_dry_flag = 1; //if gpro_t.g_manual_shutoff_dry_flag ==1,don't again open dry function.
         		   LED_DRY_OFF();
         		   gpro_t.send_ack_cmd = check_ack_ptc_off;
         		   gpro_t.gTimer_again_send_power_on_off =0;
@@ -314,7 +314,7 @@ static void vTaskRunPro(void *pvParameters)
        }
 
    
-    //  send_cmd_ack_hanlder();
+      send_cmd_ack_hanlder();
 
 	  vTaskDelay(10);
      
@@ -355,9 +355,15 @@ static void vTaskStart(void *pvParameters)
             /* 接收到消息，检测那个位被按下 */
             if((ulValue & POWER_BIT_0 ) != 0)
             {
-              
+                  if(power_on_times==0){
+									   power_on_times++;
+									
+									}
+									else{
                   key_t.key_wifi_flag =0;
                   key_t.key_power_flag =1;
+										
+									}
                 
                 
             }

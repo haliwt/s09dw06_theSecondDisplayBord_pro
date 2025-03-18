@@ -23,6 +23,7 @@ typedef enum{
 
 void SendData_PowerOnOff(uint8_t index);
 
+void SendData_Tx_Data(uint8_t dcmd,uint8_t ddata);
 
 
 

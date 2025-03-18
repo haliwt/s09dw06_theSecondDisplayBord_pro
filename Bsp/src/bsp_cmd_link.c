@@ -105,10 +105,10 @@ void SendData_Tx_Data(uint8_t dcmd,uint8_t ddata)
 {
 	outputBuf[0]=FRAME_HEADER; //display board head = 0xA5
 	outputBuf[1]= DEVICE_NUMBER; //display device Number:is 0x01
-	outputBuf[2]= dcmd; // command type = 0x06 ->buzzer sound open or not
-	outputBuf[3]= 0x0f; //  0x0f -> is data ,don't command.
-	outputBuf[4]=0x01; // data is length: 00 ->don't data ,0x01 -> has one data.
-    outputBuf[5]=ddata; // frame of end code -> 0xFE.
+	outputBuf[2]= dcmd; // command 
+	outputBuf[3]= 0x0f; //  0x0f -> is data 
+	outputBuf[4]=0x01; // data is length: only one word of data.
+    outputBuf[5]=ddata; // receive of data
     outputBuf[6]=FRAME_END; // frame of end code -> 0xFE.
     outputBuf[7] = bcc_check(outputBuf,7);
 
