@@ -202,7 +202,7 @@ void disp_smg_blink_set_tempeature_value(void)
 	  if(run_t.set_temperature_special_value ==2 && gpro_t.set_timer_timing_doing_value==0){
 	  	
 	  	 
-		  if(run_t.gTimer_set_temp_times  > 15 ){ // 15ms * 4 =60ms
+		  if(run_t.gTimer_set_temp_times  > 0 ){ // 15ms * 4 =60ms
                  run_t.gTimer_set_temp_times=0;
                  counter_times++ ;  
 // cancel display temperature SMG number led blink function.
@@ -219,7 +219,7 @@ void disp_smg_blink_set_tempeature_value(void)
        
 
 
-           if(counter_times > 3){
+           if(counter_times > 2){
 			 
            		counter_times=0;
           

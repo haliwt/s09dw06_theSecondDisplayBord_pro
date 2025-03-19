@@ -294,7 +294,7 @@ static void vTaskRunPro(void *pvParameters)
 
        }
 	   power_on_run_handler();
-      // SetDataTemperatureValue()  ;   
+     
        Display_TimeColon_Blink_Fun();
        set_timer_fun_led_blink();
        wifi_connect_state_fun(run_t.wifi_led_fast_blink);

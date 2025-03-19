@@ -101,7 +101,8 @@ void power_on_run_handler(void)
 					break;
 
 					case 1:
-                 
+
+						 
                			 RunLocal_Dht11_Data_Process();
                        
 				        step_state=2;
@@ -305,6 +306,7 @@ void key_add_fun(void)
     
         run_t.set_temperature_special_value=1;
         run_t.gTimer_key_temp_timing=0;
+		
        
         gpro_t.g_manual_shutoff_dry_flag =0; // allow open dry function.WT.2025.02.21
         set_temp_flag=1;
@@ -500,6 +502,7 @@ void compare_temp_value(void)
 
     if(gpro_t.set_temp_value_success ==1){
 		
+	     gpro_t.gTimer_set_temperature_value =0;
 
 	  // SendData_Tx_Data(0x11,gpro_t.set_up_temperature_value);
     

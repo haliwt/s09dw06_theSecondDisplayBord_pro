@@ -168,25 +168,25 @@ void send_cmd_ack_hanlder(void)
            
     case check_ack_dry_notice_on:
      
-                if(gpro_t.receive_copy_cmd == 1){
-            			gpro_t.receive_copy_cmd =0;
-            			 gpro_t.send_ack_cmd = 0;   
-                }
-                else if(gpro_t.receive_copy_cmd != 0 && gpro_t.gTimer_again_send_power_on_off >1){
-            			  gpro_t.gTimer_again_send_power_on_off =0;
-            			  SendData_Set_Command(dry_notice_cmd,0x01); // link wifi of command .
-                }
+//                if(gpro_t.receive_copy_cmd == 1){
+//            			gpro_t.receive_copy_cmd =0;
+//            			 gpro_t.send_ack_cmd = 0;   
+//                }
+//                else if(gpro_t.receive_copy_cmd != 0 && gpro_t.gTimer_again_send_power_on_off >1){
+//            			  gpro_t.gTimer_again_send_power_on_off =0;
+//            			  SendData_Set_Command(dry_notice_cmd,0x01); // link wifi of command .
+//                }
       break;
 
       case check_ack_dry_notice_off:
-                if(gpro_t.receive_copy_cmd == 2){
-            			gpro_t.receive_copy_cmd =0;
-            			 gpro_t.send_ack_cmd = 0;   
-                }
-                else if(gpro_t.receive_copy_cmd != 0 && gpro_t.gTimer_again_send_power_on_off >1){
-            			  gpro_t.gTimer_again_send_power_on_off =0;
-            			  SendData_Set_Command(dry_notice_cmd,0x0); // link wifi of command .
-                }
+//                if(gpro_t.receive_copy_cmd == 2){
+//            			gpro_t.receive_copy_cmd =0;
+//            			 gpro_t.send_ack_cmd = 0;   
+//                }
+//                else if(gpro_t.receive_copy_cmd != 0 && gpro_t.gTimer_again_send_power_on_off >1){
+//            			  gpro_t.gTimer_again_send_power_on_off =0;
+//            			  SendData_Set_Command(dry_notice_cmd,0x0); // link wifi of command .
+//                }
           
     break;
 

@@ -93,11 +93,12 @@ typedef struct _pro_t{
 
 
 
-   
+   uint8_t gTimer_set_temperature_value;
    uint8_t gTimer_again_send_power_on_off;
    uint8_t interval_works_ten_minutes_flag;
    uint16_t gTimer_total_works_two_hours ;
    uint16_t gTimer_4bitsmg_blink_times;
+   
 
 
 

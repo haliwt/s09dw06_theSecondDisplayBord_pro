@@ -43,7 +43,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     tm0++;
 	
     run_t.gTimer_smg_blink_times++;
-	run_t.gTimer_set_temp_times++;
+	
 	
     
     gpro_t.gTimer_4bitsmg_blink_times++;
@@ -69,6 +69,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		
 		run_t.gTimer_key_temp_timing++ ;
 		run_t.gTimer_wifi_connect_counter ++;
+		run_t.gTimer_set_temp_times++;
 
         //usart
       
@@ -77,6 +78,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
        
       gpro_t.gTimer_total_works_two_hours++;
       gpro_t.gTimer_again_send_power_on_off++;
+	  gpro_t.gTimer_set_temperature_value++;
 
        
        
