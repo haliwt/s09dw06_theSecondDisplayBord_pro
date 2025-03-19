@@ -133,6 +133,9 @@ void key_dec_fun(void);
 
 void mode_key_fun(void);
 
+void SetDataTemperatureValue(void);
+
+
 void compare_temp_value(void);
 
 void detected_ptc_or_fan_warning_fun(void);

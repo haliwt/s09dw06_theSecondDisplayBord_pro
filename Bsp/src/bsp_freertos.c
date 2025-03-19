@@ -124,6 +124,8 @@ static void vTaskDecoderPro(void *pvParameters)
 			/* 接收到消息，检测那个位被按下 */
 
 			if((ulValue & DECODER_BIT_9) != 0){
+
+			   
 				gl_tMsg.disp_rx_cmd_done_flag = 0;
 
 				check_code =  bcc_check(gl_tMsg.usData,gl_tMsg.ulid);
@@ -132,6 +134,7 @@ static void vTaskDecoderPro(void *pvParameters)
 
 				receive_data_from_mainboard(gl_tMsg.usData);
 				}
+			    
 			}
 
 		}
@@ -290,11 +293,8 @@ static void vTaskRunPro(void *pvParameters)
 	
 
        }
-
-   
-       
-       power_on_run_handler();
-             
+	   power_on_run_handler();
+      // SetDataTemperatureValue()  ;   
        Display_TimeColon_Blink_Fun();
        set_timer_fun_led_blink();
        wifi_connect_state_fun(run_t.wifi_led_fast_blink);
@@ -316,7 +316,7 @@ static void vTaskRunPro(void *pvParameters)
    
       send_cmd_ack_hanlder();
 
-	  vTaskDelay(10);
+	  vTaskDelay(20);
      
 
        } //wihile(1) ---end

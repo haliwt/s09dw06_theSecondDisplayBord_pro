@@ -10,7 +10,7 @@ uint8_t hours_one,hours_two,minutes_one,minutes_two;
 
 uint8_t  step_state;
 uint8_t  first_set_temperature_value;
-
+uint8_t  set_temp_flag;
 
 void bsp_init(void)
 {
@@ -243,13 +243,6 @@ void power_off_run_handler(void)
        }
 
 }
-/*********************************************************************************
- * 
- * Function Name:void ai_on_off_handler(void)
- * 
- * 
- **********************************************************************************/
-
 
 
 /*********************************************************************************
@@ -284,8 +277,8 @@ void key_add_fun(void)
     switch(gpro_t.set_timer_timing_doing_value){
 
     case 0:  //set temperature value 
-         SendData_Buzzer();
-       
+         //SendData_Buzzer();
+     
 	    if(first_set_temperature_value==0){
 		  first_set_temperature_value++;
 
@@ -298,6 +291,8 @@ void key_add_fun(void)
 		}
 		
 		if(gpro_t.set_up_temperature_value > 40)gpro_t.set_up_temperature_value= 40;
+    SendData_SetTemp_Data(gpro_t.set_up_temperature_value);
+		
 
         run_t.set_temperature_decade_value = gpro_t.set_up_temperature_value / 10 ;
         run_t.set_temperature_unit_value  =gpro_t.set_up_temperature_value % 10; //
@@ -307,9 +302,11 @@ void key_add_fun(void)
         run_t.gTimer_key_temp_timing=0;
        
         gpro_t.g_manual_shutoff_dry_flag =0; // allow open dry function.WT.2025.02.21
-      
+        set_temp_flag=1;
         
       TM1639_Write_2bit_SetUp_TempData(run_t.set_temperature_decade_value,run_t.set_temperature_unit_value,0);
+	 // SendData_Tx_Data(0x11,gpro_t.set_up_temperature_value);
+		 
 
     break;
     
@@ -380,7 +377,8 @@ void key_dec_fun(void)
 
     case 0: //set temperature value
 
-        SendData_Buzzer();
+      //  SendData_SetTemp_Data(gpro_t.set_up_temperature_value);//SendData_Buzzer();
+         
 
         //setup temperature of value,minimum 20,maximum 40
          if(first_set_temperature_value==0){
@@ -396,6 +394,8 @@ void key_dec_fun(void)
 		}
        
         if(gpro_t.set_up_temperature_value<20) gpro_t.set_up_temperature_value=20;
+
+		 SendData_SetTemp_Data(gpro_t.set_up_temperature_value);//SendData_Tx_Data(0x11,gpro_t.set_up_temperature_value);
       
 
         run_t.set_temperature_decade_value = gpro_t.set_up_temperature_value / 10 ;
@@ -405,12 +405,14 @@ void key_dec_fun(void)
         gpro_t.g_manual_shutoff_dry_flag = 0 ;//  allow open dry function
         run_t.set_temperature_special_value=1;
         run_t.gTimer_key_temp_timing=0;
+		set_temp_flag=1;
 
         TM1639_Write_2bit_SetUp_TempData(run_t.set_temperature_decade_value,run_t.set_temperature_unit_value,0);
+		//SendData_Tx_Data(0x11,gpro_t.set_up_temperature_value);
     break;
 
     case 1: //set timer timing value
-    SendData_Buzzer();
+    SendData_SetTemp_Data(gpro_t.set_up_temperature_value);//SendData_Buzzer();
 
    // ai_ico_fast_blink();
     run_t.gTimer_key_timing =0;
@@ -455,6 +457,24 @@ void key_dec_fun(void)
 
 }
 
+/*********************************************************************************
+ * 
+ * Function Name:void ai_on_off_handler(void)
+ * 
+ * 
+ **********************************************************************************/
+void SetDataTemperatureValue(void)
+{
+    if(set_temp_flag ==1){
+	 set_temp_flag++;
+
+     //SendData_Tx_Data(0x11,gpro_t.set_up_temperature_value);
+     SendData_SetTemp_Data(gpro_t.set_up_temperature_value);
+     
+	}  
+
+
+}
 
 
 

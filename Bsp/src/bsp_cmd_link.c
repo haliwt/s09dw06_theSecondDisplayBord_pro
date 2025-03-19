@@ -140,8 +140,6 @@ void SendData_Temp_Data(uint8_t tdata)
 		
 	transferSize=8;
 	sendUartData(outputBuf, transferSize);
-		
-
 }
 
 /*********************************************************
@@ -159,12 +157,12 @@ void SendData_SetTemp_Data(uint8_t tdata)
 	outputBuf[1]= DEVICE_NUMBER; //display device Number:is 0x02
 	outputBuf[2]=0x2A; // command type = 0x1A -> temperature of value 
 	outputBuf[3]=0x0f; // command order -> 0x0f -> is data , don't order.
-	outputBuf[4]=0x01; // data is length: 00 ->don't data 
-	outputBuf[5]=tdata; // frame of end code -> 0xFE.
-	outputBuf[6]=FRAME_END; // frame of end code -> 0xFE.
-    outputBuf[7] = bcc_check(outputBuf,7);
+	//outputBuf[4]=0x01; // data is length: 00 ->don't data 
+	outputBuf[4]=tdata; // frame of end code -> 0xFE.
+	outputBuf[5]=FRAME_END; // frame of end code -> 0xFE.
+    outputBuf[6] = bcc_check(outputBuf,6);
 		
-	transferSize=8;
+	transferSize=7;
 	sendUartData(outputBuf, transferSize);
 		
 

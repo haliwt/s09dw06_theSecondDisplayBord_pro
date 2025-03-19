@@ -363,6 +363,25 @@ void receive_data_from_mainboard(uint8_t *pdata)
 
       break;
 
+	  case 0x11: //main board set temperature value 
+	  
+	      if(pdata[4] == 0x01){  //warning
+	  
+				
+			gpro_t.set_up_temperature_value =pdata[5];
+			 gpro_t.g_manual_shutoff_dry_flag = 0 ;//  allow open dry function
+             run_t.set_temperature_special_value=1;
+             run_t.gTimer_key_temp_timing=0;
+
+			   run_t.set_temperature_decade_value = gpro_t.set_up_temperature_value / 10 ;
+               run_t.set_temperature_unit_value  =gpro_t.set_up_temperature_value % 10; //
+
+               TM1639_Write_2bit_SetUp_TempData(run_t.set_temperature_decade_value,run_t.set_temperature_unit_value,0);
+				
+	  
+			 }
+	break;
+
 
      //接收的是数据
 
