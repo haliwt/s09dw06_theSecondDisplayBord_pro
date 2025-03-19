@@ -279,19 +279,24 @@ void key_add_fun(void)
     case 0:  //set temperature value 
          //SendData_Buzzer();
      
-	    if(first_set_temperature_value==0){
-		  first_set_temperature_value++;
+	    if(gpro_t.set_up_temperature_value > 40){
+		 
 
-		  gpro_t.set_up_temperature_value =21;
+		  gpro_t.set_up_temperature_value =40;
+
+		}
+		else if(gpro_t.set_up_temperature_value < 20){
+
+		    gpro_t.set_up_temperature_value =21;
+
 
 		}
 		else{
 			gpro_t.set_up_temperature_value++;
 
 		}
-		
-		if(gpro_t.set_up_temperature_value > 40)gpro_t.set_up_temperature_value= 40;
-    SendData_SetTemp_Data(gpro_t.set_up_temperature_value);
+		 if(gpro_t.set_up_temperature_value > 40)gpro_t.set_up_temperature_value =40;
+	     SendData_SetTemp_Data(gpro_t.set_up_temperature_value);
 		
 
         run_t.set_temperature_decade_value = gpro_t.set_up_temperature_value / 10 ;
@@ -381,10 +386,14 @@ void key_dec_fun(void)
          
 
         //setup temperature of value,minimum 20,maximum 40
-         if(first_set_temperature_value==0){
-		  first_set_temperature_value++;
+         if(gpro_t.set_up_temperature_value <20){
+		  
+            gpro_t.set_up_temperature_value =39;
 
-		  gpro_t.set_up_temperature_value =39;
+		}
+		else if(gpro_t.set_up_temperature_value<20){
+			gpro_t.set_up_temperature_value=20;
+
 
 		}
 		else{
@@ -393,7 +402,7 @@ void key_dec_fun(void)
 
 		}
        
-        if(gpro_t.set_up_temperature_value<20) gpro_t.set_up_temperature_value=20;
+          if(gpro_t.set_up_temperature_value<20)gpro_t.set_up_temperature_value=20;
 
 		 SendData_SetTemp_Data(gpro_t.set_up_temperature_value);//SendData_Tx_Data(0x11,gpro_t.set_up_temperature_value);
       
