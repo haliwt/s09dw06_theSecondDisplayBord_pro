@@ -165,7 +165,7 @@ static void vTaskRunPro(void *pvParameters)
     if(AI_KEY_VALUE() == KEY_DOWN &&   key_t.key_wifi_flag <60 && run_t.gPower_On == power_on){
         	key_t.key_wifi_flag++; 
         
-         if(key_t.key_wifi_flag >19){
+         if(key_t.key_wifi_flag >30){
           key_t.key_wifi_flag=80;
           run_t.wifi_led_fast_blink=1;
           run_t.wifi_connect_state_flag = wifi_connect_null;
