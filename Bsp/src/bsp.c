@@ -84,7 +84,7 @@ void power_on_run_handler(void)
                    Set_TimerTiming_Number_Value();
                    
               }
-              else if(gpro_t.set_timer_timing_doing_value == 0 &&  run_t.set_temperature_special_value   >0 &&  run_t.set_temperature_special_value != 0xff ){
+              else if(gpro_t.set_timer_timing_doing_value == 0 &&  run_t.set_temperature_special_flag   >0 &&  run_t.set_temperature_special_flag != 0xff ){
 
                    //
                    disp_smg_blink_set_tempeature_value();
@@ -103,7 +103,7 @@ void power_on_run_handler(void)
 					case 1:
 
 						 
-               			 RunLocal_Dht11_Data_Process();
+               			// RunLocal_Dht11_Data_Process();
                        
 				        step_state=2;
 	                    
@@ -304,7 +304,7 @@ void key_add_fun(void)
         run_t.set_temperature_unit_value  =gpro_t.set_up_temperature_value % 10; //
 
     
-        run_t.set_temperature_special_value=1;
+        run_t.set_temperature_special_flag=1;
         run_t.gTimer_key_temp_timing=0;
 		
        
@@ -414,7 +414,7 @@ void key_dec_fun(void)
 
 
         gpro_t.g_manual_shutoff_dry_flag = 0 ;//  allow open dry function
-        run_t.set_temperature_special_value=1;
+        run_t.set_temperature_special_flag=1;
         run_t.gTimer_key_temp_timing=0;
 		set_temp_flag=1;
 

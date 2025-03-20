@@ -191,18 +191,18 @@ void disp_smg_blink_set_tempeature_value(void)
 {
      static uint8_t counter_times;
 	  //waiting for 4 s 
-	  if(run_t.gTimer_key_temp_timing > 1 && run_t.set_temperature_special_value ==1 && gpro_t.set_timer_timing_doing_value==0){
+	  if(run_t.gTimer_key_temp_timing > 1 && run_t.set_temperature_special_flag ==1 && gpro_t.set_timer_timing_doing_value==0){
 			
 			
-			run_t.set_temperature_special_value =2;
+			run_t.set_temperature_special_flag =2;
 			run_t.gTimer_set_temp_times =0; //couter time of smg blink timing 
 
 	 }
 	 //temperature of smg of LED blink .
-	  if(run_t.set_temperature_special_value ==2 && gpro_t.set_timer_timing_doing_value==0){
+	  if(run_t.set_temperature_special_flag ==2 && gpro_t.set_timer_timing_doing_value==0){
 	  	
 	  	 
-		  if(run_t.gTimer_set_temp_times  > 0 ){ // 15ms * 4 =60ms
+		  if(run_t.gTimer_set_temp_times  > 0  && run_t.set_temperature_special_flag !=0xff){ // 15ms * 4 =60ms
                  run_t.gTimer_set_temp_times=0;
                  counter_times++ ;  
 // cancel display temperature SMG number led blink function.
@@ -219,13 +219,13 @@ void disp_smg_blink_set_tempeature_value(void)
        
 
 
-           if(counter_times > 2){
+           if(counter_times > 1){
 			 
            		counter_times=0;
           
 			 gpro_t.set_temp_value_success=1;
 			 
-	         run_t.set_temperature_special_value =0xff;
+	         run_t.set_temperature_special_flag =0xff;
 			  run_t.gTimer_temp_delay = 70; //at once shut down ptc  funciton
 			  run_t.gTimer_display_dht11 = 90;
 		
@@ -233,6 +233,7 @@ void disp_smg_blink_set_tempeature_value(void)
 			//  SendData_Tx_Data(0x11,gpro_t.set_up_temperature_value);
 			  TM1639_Write_2bit_SetUp_TempData(run_t.set_temperature_decade_value,run_t.set_temperature_unit_value,0);
               compare_temp_value();
+			  Display_DHT11_Value();
               
              }
 	     }

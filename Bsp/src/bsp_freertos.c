@@ -197,14 +197,14 @@ static void vTaskRunPro(void *pvParameters)
 			}
 			else if(key_t.key_dec_flag ==1){// && DEC_KEY_VALUE()==KEY_UP){
 				 key_t.key_dec_flag ++;
-				SendData_Buzzer();//SendData_Buzzer_Has_Ack();
+				//SendData_Buzzer();//SendData_Buzzer_Has_Ack();
 				gpro_t.send_ack_cmd = check_ack_buzzer;
 				gpro_t.gTimer_again_send_power_on_off =0;
 				key_dec_fun();
 			}
 			else if(key_t.key_add_flag ==1){ // && ADD_KEY_VALUE()==KEY_UP){
 				 key_t.key_add_flag ++;
-				 SendData_Buzzer();//SendData_Buzzer_Has_Ack();
+				// SendData_Buzzer();//SendData_Buzzer_Has_Ack();
 				gpro_t.send_ack_cmd = check_ack_buzzer;
 				gpro_t.gTimer_again_send_power_on_off =0;
 				key_add_fun();
@@ -296,6 +296,7 @@ static void vTaskRunPro(void *pvParameters)
 	   power_on_run_handler();
      
        Display_TimeColon_Blink_Fun();
+	   RunLocal_Dht11_Data_Process();
        set_timer_fun_led_blink();
        wifi_connect_state_fun(run_t.wifi_led_fast_blink);
        if(power_on_theFirst_times < 10 && gpro_t.set_timer_timing_doing_value==0){
