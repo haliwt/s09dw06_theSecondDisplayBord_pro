@@ -6,7 +6,8 @@ static void  wifi_ico_fast_blink(void);
 void wifi_connect_state_fun(uint8_t data)
 {
 
-    switch(data){
+    static uint8_t wifi_led_blink;
+	switch(data){
     
     case 0x01:
 
@@ -26,8 +27,19 @@ void wifi_connect_state_fun(uint8_t data)
 
     case 0:
     if(run_t.wifi_connect_state_flag == wifi_connect_null){
-       LED_WIFI_TOGGLE() ;
-       osDelay(600);
+
+	   if(gpro_t.gTimer_wifi_led_blink > 1){
+	    gpro_t.gTimer_wifi_led_blink =0;
+
+	      wifi_led_blink = wifi_led_blink ^ 0x01;
+	      if(wifi_led_blink ==1){
+	   	     LED_WIFI_ON() ;
+	       }
+		   else{
+             LED_WIFI_OFF();
+
+		   }
+	   }
     }
     else{
         LED_WIFI_ON();

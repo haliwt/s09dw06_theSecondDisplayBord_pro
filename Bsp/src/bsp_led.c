@@ -74,13 +74,13 @@ void Panel_Led_OnOff_Function(void)
 		run_t.gTimer_run_ico=0;
 		
 	  LED_POWER_ON();
-	if(run_t.wifi_connect_state_flag ==wifi_connect_success){
-         LED_WIFI_ON();
-   }
-	else if(run_t.wifi_led_fast_blink ==0){
-
-		LED_WIFI_OFF() ;
-      }
+//	if(run_t.wifi_connect_state_flag ==wifi_connect_success){
+//         LED_WIFI_ON();
+//   }
+//	else if(run_t.wifi_led_fast_blink ==0){
+//
+//		LED_WIFI_OFF() ;
+//    }
 
 
     if(run_t.gMouse  == 0 ){
@@ -331,3 +331,6 @@ void Power_ON_Led(void)
 	
 
 }
+
+
+

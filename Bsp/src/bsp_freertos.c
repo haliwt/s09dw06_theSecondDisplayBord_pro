@@ -241,6 +241,7 @@ static void vTaskRunPro(void *pvParameters)
              if(gpro_t.set_timer_timing_doing_value==0){
 				 if(run_t.gDry ==0){
                    SendData_Set_Command(dry_cmd,0x01); //
+                    osDelay(5);
         		   run_t.gDry =1;
                    gpro_t.g_manual_shutoff_dry_flag = 0;
         		   LED_DRY_ON();
@@ -250,6 +251,7 @@ static void vTaskRunPro(void *pvParameters)
         	   }
         	   else{
                    SendData_Set_Command(dry_cmd,0x00); //
+                    osDelay(5);
         		   run_t.gDry = 0;
                    gpro_t.g_manual_shutoff_dry_flag = 1; //if gpro_t.g_manual_shutoff_dry_flag ==1,don't again open dry function.
         		   LED_DRY_OFF();
@@ -266,6 +268,7 @@ static void vTaskRunPro(void *pvParameters)
 				 if(run_t.gMouse ==0){
         		   
                    SendData_Set_Command(mouse_cmd,0x01); //
+                   osDelay(5);
                    run_t.gMouse =1;
         		   LED_MOUSE_ON();
         		
@@ -275,6 +278,7 @@ static void vTaskRunPro(void *pvParameters)
         	      else if(run_t.gMouse ==1){
         		   
                    SendData_Set_Command(mouse_cmd,0x00); //
+                    osDelay(5);
                    run_t.gMouse = 0;
         		   LED_MOUSE_OFF();
         		 
@@ -290,7 +294,7 @@ static void vTaskRunPro(void *pvParameters)
      if(key_t.key_wifi_flag==80){
            
         SendData_Set_Command(wifi_cmd,0x01);
-        osDelay(1000);
+        osDelay(10);
         key_t.key_wifi_flag =0;
 	
 
@@ -306,7 +310,7 @@ static void vTaskRunPro(void *pvParameters)
          Display_DHT11_Value();
 
        }
-
+     
        works_run_two_hours_handler();
 
       }

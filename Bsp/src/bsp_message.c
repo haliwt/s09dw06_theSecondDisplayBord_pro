@@ -418,13 +418,7 @@ void receive_data_from_mainboard(uint8_t *pdata)
             
             run_t.gReal_humtemp[0] = pdata[5] ;//gpro_t.humidity_real_value = pdata[5];
            
-            
-             //gpro_t.temp_real_value = pdata[6];
-            
-            //gpro_t.gtmep_value = pdata[6] ;// temperature value 
-           
-
-            run_t.gReal_humtemp[1] = pdata[6];
+             run_t.gReal_humtemp[1] = pdata[6];
 
         }
         else if(pdata[4] == 0x01){ //数据)
@@ -459,26 +453,26 @@ void receive_data_from_mainboard(uint8_t *pdata)
         }
       break;
 
-	  case wifi_connect_data:
+	  case wifi_connect_data: //notice is command
 	  	
-        if(pdata[3]==0x0F){ // 0xF is explain is data don't command.
+        if(pdata[3]==0x00){ // 0xF is explain is data don't command.
 	    if(pdata[4] == 0x01){   //only 
 	  
-            if(pdata[5]==0x01){//wifi connect is success.
+           
 			 run_t.wifi_connect_state_flag = wifi_connect_success;
 	         run_t.wifi_led_fast_blink=0;
 			  
 	  
 			}
-			else if(pdata[5] == 0x0){ //close
+			else{ //close
 	  
 			   run_t.wifi_connect_state_flag = wifi_connect_null;
 	            run_t.wifi_led_fast_blink=0;
 			    run_t.display_beijing_time_flag =0;
 	  
 			}
-	    	}
-       }
+	    }
+  
 	  break;
 
 

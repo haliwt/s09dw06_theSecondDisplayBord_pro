@@ -8,11 +8,17 @@
 #define LED_POWER_OFF()            	  HAL_GPIO_WritePin(LED_POWER_GPIO_Port, LED_POWER_Pin,GPIO_PIN_RESET)
 
 
-#define LED_WIFI_TOGGLE()          HAL_GPIO_TogglePin(WIFI_LED_EN_GPIO_Port, WIFI_LED_EN_Pin)
 
-#define LED_WIFI_ON()			        HAL_GPIO_WritePin(WIFI_LED_EN_GPIO_Port , WIFI_LED_EN_Pin,GPIO_PIN_SET)
+#if 0
+#define LED_WIFI_ON()			  HAL_GPIO_WritePin(WIFI_LED_EN_GPIO_Port , WIFI_LED_EN_Pin,GPIO_PIN_SET)
 #define LED_WIFI_OFF()    	      HAL_GPIO_WritePin(WIFI_LED_EN_GPIO_Port , WIFI_LED_EN_Pin,GPIO_PIN_RESET)
-#define LED_WIFI_TOGGLE()          HAL_GPIO_TogglePin(WIFI_LED_EN_GPIO_Port, WIFI_LED_EN_Pin)
+#define LED_WIFI_TOGGLE()         HAL_GPIO_TogglePin(WIFI_LED_EN_GPIO_Port, WIFI_LED_EN_Pin)
+#else 
+// 寄存器方式控制 LED
+#define LED_WIFI_ON()             (WIFI_LED_EN_GPIO_Port->BSRR = WIFI_LED_EN_Pin)
+#define LED_WIFI_OFF()            (WIFI_LED_EN_GPIO_Port->BRR = WIFI_LED_EN_Pin)
+#define LED_WIFI_TOGGLE()         (WIFI_LED_EN_GPIO_Port->ODR ^= WIFI_LED_EN_Pin)
+#endif 
 
 
 #define LED_DRY_ON()			  HAL_GPIO_WritePin(DRY_LED_EN_GPIO_Port, DRY_LED_EN_Pin,GPIO_PIN_SET)
