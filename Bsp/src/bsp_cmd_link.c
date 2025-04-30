@@ -41,7 +41,7 @@ static void fillFrame(uint8_t cmd, uint8_t frameType, uint8_t *data, uint8_t dat
     outputBuf[2] = cmd;                // 命令
     outputBuf[3] = frameType;          // 帧类型（0x0F 表示数据类型，其他表示命令类型）
 
-    if (frameType == HAS_DATA) {       // 数据类型
+    if (frameType == HAS_DATA){       // 数据类型
         outputBuf[4] = dataLen;        // 数据长度
         for (uint8_t i = 0; i < dataLen; i++) {
             outputBuf[5 + i] = data[i]; // 填充数据

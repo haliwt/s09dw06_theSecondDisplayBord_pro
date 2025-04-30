@@ -255,8 +255,10 @@ void receive_data_from_mainboard(uint8_t *pdata)
      break;
 
      case dry_cmd: //PTC打开关闭指令
+       
+     if(pdata[3] == 0x00){
 
-     if(pdata[3] == 0x01){
+	   if(pdata[4]== 0x01){
 
             run_t.gDry =1 ;//&& run_t.gPlasma ==1  && run_t.gUltransonic==1
             gpro_t.g_manual_shutoff_dry_flag = 0;
@@ -268,53 +270,66 @@ void receive_data_from_mainboard(uint8_t *pdata)
           
 
         }
-
+    	}
      break;
 
      case plasma_cmd: //PLASMA 打开关闭指令
 
-        if(pdata[3] == 0x01){
-          
-        run_t.gPlasma =1;
+		if(pdata[3] == 0x00){
+		
+			if(pdata[4]== 0x01){
+	          
+	        run_t.gPlasma =1;
 
 
-        }
-        else if(pdata[3] == 0x0){
-          
-         run_t.gPlasma =0;
+	        }
+	        else if(pdata[3] == 0x0){
+	          
+	         run_t.gPlasma =0;
 
-        }
-
+	        }
+		}
 
      break;
 
 
       case mouse_cmd: //ultrasonic  打开关闭指令
 
-        if(pdata[3] == 0x01){  //open
-           
-           run_t.gMouse = 1;
+        
+	   if(pdata[3] == 0x00){
+		   
+		   if(pdata[4]== 0x01){
+	           
+	           run_t.gMouse = 1;
 
-        }
-        else if(pdata[3] == 0x0){ //close
-         run_t.gMouse = 0;
-        }
+	        }
+	        else { //close
+	         run_t.gMouse = 0;
+	        }
+
+		}
 
 
      break;
 
 	 case wifi_cmd:
 
-	         if(pdata[3] == 0x01){	//open
-			   
-			     run_t.wifi_led_fast_blink=1;
-                 run_t.wifi_connect_state_flag = wifi_connect_null;
-                 run_t.gTimer_wifi_connect_counter =0; //120s counte start
-	 
-			}
-			else if(pdata[3] == 0x0){ //close
-			 
-			}
+
+	if(pdata[3] == 0x00){
+
+		if(pdata[4]== 0x01){
+
+		run_t.wifi_led_fast_blink=1;
+		run_t.wifi_connect_state_flag = wifi_connect_null;
+		run_t.gTimer_wifi_connect_counter =0; //120s counte start
+
+		}
+		else if(pdata[3] == 0x0){ //close
+
+		}
+
+
+	}
 
 
 	 break;
@@ -324,24 +339,26 @@ void receive_data_from_mainboard(uint8_t *pdata)
 
       case temp_warning: //temperature of high warning.
 
-        if(pdata[3] == 0x01){  //warning
+		if(pdata[3] == 0x00){
+			
+			if(pdata[4]== 0x01){
 
-            run_t.ptc_warning = 1;
-            //run_t.setup_timer_timing_item =  PTC_WARNING; //ptc warning
-           
+	            run_t.ptc_warning = 1;
+	            //run_t.setup_timer_timing_item =  PTC_WARNING; //ptc warning
+	           
 
-            run_t.gDry =0;
-            SendData_Set_Command(0x22,0x0); //close ptc ,but don't buzzer sound .
+	            run_t.gDry =0;
+	            SendData_Set_Command(0x22,0x0); //close ptc ,but don't buzzer sound .
 
-        }
-        else if(pdata[3] == 0x0){ //close
+	        }
+	        else if(pdata[3] == 0x0){ //close
 
-           run_t.ptc_warning = 0;
-
-
-        }
+	           run_t.ptc_warning = 0;
 
 
+	        }
+
+	    }
 
       break;
 
@@ -367,10 +384,15 @@ void receive_data_from_mainboard(uint8_t *pdata)
 
 	  case 0x11: //main board set temperature value 
 	  
-	      if(pdata[4] == 0x01){  //warning
-	  
+          
+		  if(pdata[3] == 0x0F){
+		  
+			if(pdata[4]== 0x01){ // one only data 
+
+		  
 				
-			gpro_t.set_up_temperature_value =pdata[5];
+			gpro_t.set_up_temperature_value =pdata[5];//warning
+	  
 			 gpro_t.g_manual_shutoff_dry_flag = 0 ;//  allow open dry function
              run_t.set_temperature_special_flag=1;
              run_t.gTimer_key_temp_timing=0;
@@ -381,7 +403,10 @@ void receive_data_from_mainboard(uint8_t *pdata)
                TM1639_Write_2bit_SetUp_TempData(run_t.set_temperature_decade_value,run_t.set_temperature_unit_value,0);
 				
 	  
-			 }
+			 
+
+				}
+		  	}
 	break;
 
 
@@ -389,7 +414,7 @@ void receive_data_from_mainboard(uint8_t *pdata)
 
       case temp_hum_data: //温度,湿度数据
 
-        if(pdata[4] == 0x02){ //数据
+        if(pdata[4] == 0x02){ //数据,two 
             
             run_t.gReal_humtemp[0] = pdata[5] ;//gpro_t.humidity_real_value = pdata[5];
            
@@ -437,20 +462,22 @@ void receive_data_from_mainboard(uint8_t *pdata)
 	  case wifi_connect_data:
 	  	
         if(pdata[3]==0x0F){ // 0xF is explain is data don't command.
-	    if(pdata[4] == 0x01){  //wifi connect is success.
+	    if(pdata[4] == 0x01){   //only 
 	  
-		     run_t.wifi_connect_state_flag = wifi_connect_success;
+            if(pdata[5]==0x01){//wifi connect is success.
+			 run_t.wifi_connect_state_flag = wifi_connect_success;
 	         run_t.wifi_led_fast_blink=0;
 			  
 	  
 			}
-			else if(pdata[4] == 0x0){ //close
+			else if(pdata[5] == 0x0){ //close
 	  
 			   run_t.wifi_connect_state_flag = wifi_connect_null;
 	            run_t.wifi_led_fast_blink=0;
 			    run_t.display_beijing_time_flag =0;
 	  
 			}
+	    	}
        }
 	  break;
 
@@ -564,7 +591,9 @@ static void rx_answer_data_form_mainboard(uint8_t *pdata)
 
     case ack_wifi: // link wifi command
 
-      if(pdata[5] == 0x01){  // link wifi
+      if(pdata[4]==0){ //0-command ,0x0f-data
+
+	  if(pdata[5] == 0x01){  // link wifi
 
 
 
@@ -575,7 +604,7 @@ static void rx_answer_data_form_mainboard(uint8_t *pdata)
 
 
       }
-
+      }
 
    break;
 
