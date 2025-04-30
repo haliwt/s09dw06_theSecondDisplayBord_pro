@@ -507,8 +507,9 @@ static void rx_answer_data_form_mainboard(uint8_t *pdata)
     if(pdata[4]==0x00){ // is command don't data.
 
 	 if(pdata[5]==0x01){
+	 	run_t.gPower_On = power_on;
         power_on_handler();
-        run_t.gPower_On = power_on;
+        
 
      }
      else{ //power offf

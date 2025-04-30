@@ -182,17 +182,19 @@ static void vTaskRunPro(void *pvParameters)
 			    if(run_t.gPower_On == power_off){
 		
 					  SendData_PowerOnOff(1);//power on
+					  osDelay(10);
 				}
 				else{
 		
 					SendData_PowerOnOff(0);//power off
+				    osDelay(10);
 
 				}
 			}
 			else if(key_t.key_mode_flag ==1){ //&& MODEL_KEY_VALUE()==KEY_UP){
 				 key_t.key_mode_flag ++;
 				 SendData_Buzzer();//SendData_Buzzer_Has_Ack();
-	
+	             osDelay(5);
 				mode_key_fun();
 			}
 			else if(key_t.key_dec_flag ==1){// && DEC_KEY_VALUE()==KEY_UP){

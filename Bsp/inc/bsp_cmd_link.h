@@ -2,11 +2,11 @@
 #define __BSP_CMD_LINK_H_
 
 #include "main.h"
-#define  MAX_BUFFER_SIZE   8
-#define MAX_BUFFER_BUF   6
+#define  MAX_BUFFER_SIZE   12
+#define  MAX_BUFFER_BUF   12
 
-extern uint8_t inputBuf[MAX_BUFFER_SIZE];
-extern uint8_t outputBuf[8];
+//extern uint8_t inputBuf[MAX_BUFFER_SIZE];
+//extern uint8_t outputBuf[8];
 
 
 

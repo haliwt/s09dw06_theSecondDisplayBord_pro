@@ -1,8 +1,147 @@
 #include "bsp.h"
 
 // 定义宏，提高代码可读性
-#define FRAME_HEADER 				0xA5
-#define DEVICE_NUMBER 				0x02
+#define FRAME_HEADER        0xA5
+#define DEVICE_NUMBER       0x02
+#define FRAME_END           0xFE
+#define NO_DATA             0x00
+#define HAS_DATA            0x0F
+
+
+
+volatile uint8_t transOngoingFlag; // UART传输标志
+uint8_t outputBuf[MAX_BUFFER_BUF];
+volatile uint8_t transferSize;
+//uint8_t inputBuf[MAX_BUFFER_SIZE];
+
+
+/****************************************************************************************************
+ * Function Name: static void sendUartData
+ * Function: 通过UART发送数据
+ * Input Ref: data - 数据指针, size - 数据大小
+ * Return Ref: 无
+ ****************************************************************************************************/
+static void sendUartData(uint8_t *data, uint8_t size) {
+    if (size) {
+        while (transOngoingFlag); // 等待上一次传输完成
+        transOngoingFlag = 1;
+        HAL_UART_Transmit_IT(&huart1, data, size);
+    }
+}
+
+/****************************************************************************************************
+ * Function Name: static void fillFrame
+ * Function: 填充帧数据
+ * Input Ref: cmd - 命令, frameType - 帧类型, data - 数据指针, dataLen - 数据长度
+ * Return Ref: 无
+ ****************************************************************************************************/
+static void fillFrame(uint8_t cmd, uint8_t frameType, uint8_t *data, uint8_t dataLen) {
+    outputBuf[0] = FRAME_HEADER;       // 帧头
+    outputBuf[1] = DEVICE_NUMBER;      // 设备号
+    outputBuf[2] = cmd;                // 命令
+    outputBuf[3] = frameType;          // 帧类型（0x0F 表示数据类型，其他表示命令类型）
+
+    if (frameType == HAS_DATA) {       // 数据类型
+        outputBuf[4] = dataLen;        // 数据长度
+        for (uint8_t i = 0; i < dataLen; i++) {
+            outputBuf[5 + i] = data[i]; // 填充数据
+        }
+        outputBuf[5 + dataLen] = FRAME_END; // 帧尾
+        outputBuf[6 + dataLen] = bcc_check(outputBuf, 6 + dataLen); // 校验码
+        transferSize = 7 + dataLen;    // 计算帧总长度
+    } else {                           // 命令类型
+        outputBuf[4] = data[0];      // 功能码
+        outputBuf[5] = FRAME_END;      // 帧尾
+        outputBuf[6] = bcc_check(outputBuf, 6); // 校验码
+        transferSize = 7;              // 帧总长度
+    }
+}
+
+/****************************************************************************************************
+ * Function Name: SendData_Buzzer
+ * Function: 发送蜂鸣器命令
+ * Input Ref: 无
+ * Return Ref: 无
+ ****************************************************************************************************/
+void SendData_Buzzer(void) {
+    uint8_t cmd = 0x06; // 蜂鸣器命令
+    uint8_t cmdData = 0x01; // 打开蜂鸣器
+    fillFrame(cmd,NO_DATA,&cmdData,0);
+    sendUartData(outputBuf, transferSize);
+}
+
+/****************************************************************************************************
+ * Function Name: SendData_Set_Command
+ * Function: 发送设置命令
+ * Input Ref: cmd - 命令, cmdData - 命令数据
+ * Return Ref: 无
+ ****************************************************************************************************/
+void SendData_Set_Command(uint8_t cmd, uint8_t cmdData) {
+    fillFrame(cmd,NO_DATA,&cmdData, 0);
+    sendUartData(outputBuf, transferSize);
+}
+
+/****************************************************************************************************
+ * Function Name: SendData_Tx_Data
+ * Function: 发送数据命令
+ * Input Ref: cmd - 命令, data - 数据
+ * Return Ref: 无
+ ****************************************************************************************************/
+void SendData_Tx_Data(uint8_t cmd, uint8_t data) {
+    fillFrame(cmd, HAS_DATA, &data, 1);
+    sendUartData(outputBuf, transferSize);
+}
+
+/****************************************************************************************************
+ * Function Name: SendData_Temp_Data
+ * Function: 发送温度数据
+ * Input Ref: tdata - 温度数据
+ * Return Ref: 无
+ ****************************************************************************************************/
+void SendData_Temp_Data(uint8_t tdata) {
+    fillFrame(0x1A, HAS_DATA, &tdata, 1);
+    sendUartData(outputBuf, transferSize);
+}
+
+/****************************************************************************************************
+ * Function Name: SendData_SetTemp_Data
+ * Function: 发送设置温度数据
+ * Input Ref: tdata - 温度数据
+ * Return Ref: 无
+ ****************************************************************************************************/
+void SendData_SetTemp_Data(uint8_t tdata) {
+    fillFrame(0x2A, HAS_DATA, &tdata, 1);
+    sendUartData(outputBuf, transferSize);
+}
+
+/****************************************************************************************************
+ * Function Name: SendData_PowerOnOff
+ * Function: 发送电源开关命令
+ * Input Ref: index - 电源状态 (0: 关, 1: 开)
+ * Return Ref: 无
+ ****************************************************************************************************/
+void SendData_PowerOnOff(uint8_t index) {
+    fillFrame(0x01,NO_DATA,&index,0);
+    sendUartData(outputBuf, transferSize);
+}
+
+/****************************************************************************************************
+ * Function Name: HAL_UART_TxCpltCallback
+ * Function: UART发送完成回调函数
+ * Input Ref: UART_HandleTypeDef 指针
+ * Return Ref: 无
+ ****************************************************************************************************/
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
+    if (huart->Instance == USART1) {
+        transOngoingFlag = 0; // 清除传输标志
+    }
+}
+
+
+#if 0
+// 定义宏，提高代码可读性
+#define FRAME_HEADER 				0xA5  //display  board 
+#define DEVICE_NUMBER 				0x02  // 0x2 --the second display board
 #define FRAME_END 					0xFE
 #define NO_DATA 					0x00
 #define HAS_DATA 					0x0F
@@ -19,6 +158,9 @@ uint8_t outputBuf[8];
 uint8_t inputBuf[MAX_BUFFER_SIZE];
 
 volatile uint8_t transferSize;
+
+
+//#if 0
 
 /****************************************************************************************************
 **
@@ -222,7 +364,7 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
     }
 }
 
-
+#endif 
 
 #if 0
 

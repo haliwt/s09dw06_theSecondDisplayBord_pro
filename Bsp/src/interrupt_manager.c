@@ -1,5 +1,6 @@
 #include "bsp.h"
 
+uint8_t inputBuf[MAX_BUFFER_SIZE];
 
 void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 {
