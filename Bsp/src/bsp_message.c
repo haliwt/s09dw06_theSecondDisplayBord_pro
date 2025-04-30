@@ -233,15 +233,16 @@ void receive_data_from_mainboard(uint8_t *pdata)
      break;
 
      case  power_cmd:
-           if(pdata[3] == 0x01){ //power on
+           if(pdata[3] == 0x00){ //power on
 
-            run_t.gPower_On = power_on;
+            if(pdata[4]== 0x01){
+			run_t.gPower_On = power_on;
             run_t.gRunCommand_label =RUN_NULL;
             //gpro_t.receive_copy_cmd = 1;
             power_on_handler();
             
            }
-           else if(pdata[3] == 0x0){ //power off
+           else{ //power off
 
             run_t.gPower_On = power_off;
             run_t.gRunCommand_label =RUN_NULL;
@@ -249,6 +250,7 @@ void receive_data_from_mainboard(uint8_t *pdata)
            // power_off_handler();
            
            }
+          }
 
      break;
 
@@ -501,9 +503,10 @@ static void rx_answer_data_form_mainboard(uint8_t *pdata)
     
     switch(pdata[3]){
 
-    case ack_power : //power_on 
-    if(pdata[4]==0x01){ //power on or power off cmd.
-        
+    case CMD_POWER : //power_on 
+    if(pdata[4]==0x00){ // is command don't data.
+
+	 if(pdata[5]==0x01){
         power_on_handler();
         run_t.gPower_On = power_on;
 
@@ -515,12 +518,12 @@ static void rx_answer_data_form_mainboard(uint8_t *pdata)
        
 
      }
-
+    }
     break;
 
     case ack_ptc:
 
-    if(pdata[4]==1){
+    if(pdata[5]==1){
 
         gpro_t.receive_copy_cmd = 1;
     }
@@ -535,7 +538,7 @@ static void rx_answer_data_form_mainboard(uint8_t *pdata)
 
     case ack_plasma:
 
-    if(pdata[4]==1){
+    if(pdata[5]==1){
 
         gpro_t.receive_copy_cmd = 1;
     }
@@ -547,7 +550,7 @@ static void rx_answer_data_form_mainboard(uint8_t *pdata)
 
     case ack_ai:
 
-    if(pdata[4]==1){
+    if(pdata[5]==1){
 
         gpro_t.receive_copy_cmd = 1;
     }
@@ -560,7 +563,7 @@ static void rx_answer_data_form_mainboard(uint8_t *pdata)
 
     case ack_wifi: // link wifi command
 
-      if(pdata[4] == 0x01){  // link wifi
+      if(pdata[5] == 0x01){  // link wifi
 
 
 

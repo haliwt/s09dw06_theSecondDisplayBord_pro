@@ -179,7 +179,7 @@ static void vTaskRunPro(void *pvParameters)
        if(key_t.key_power_flag ==1){ //&& POWER_KEY_VALUE() ==KEY_UP){
 			key_t.key_power_flag ++;
 
-					if(run_t.gPower_On == power_off){
+			    if(run_t.gPower_On == power_off){
 		
 					  SendData_PowerOnOff(1);//power on
 				}
@@ -356,16 +356,15 @@ static void vTaskStart(void *pvParameters)
             /* 接收到消息，检测那个位被按下 */
             if((ulValue & POWER_BIT_0 ) != 0)
             {
-                  if(power_on_times==0){
-									   power_on_times++;
+            if(power_on_times==0){
+				power_on_times++;
 									
-									}
-									else{
+			}
+			else{
                   key_t.key_wifi_flag =0;
                   key_t.key_power_flag =1;
 										
-									}
-                
+			}
                 
             }
             else if((ulValue & MODE_BIT_1 ) != 0){   /* 接收到消息，检测那个位被按下 */
