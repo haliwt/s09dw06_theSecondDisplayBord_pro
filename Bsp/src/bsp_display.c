@@ -114,7 +114,7 @@ void Display_Error_Digital(uint8_t errnumbers,uint8_t sel)
 void Display_TimeColon_Blink_Fun(void)
 {
 
-  if(run_t.gTimer_time_colon >0 && gpro_t.set_timer_timing_doing_value==0){ //200 //10*20ms=300ms
+  if(run_t.gTimer_time_colon >0 && (gpro_t.set_timer_timing_doing_value==0 ||gpro_t.set_timer_timing_doing_value==3)){ //200 //10*20ms=300ms
 
 	   run_t.gTimer_time_colon =0;
        
