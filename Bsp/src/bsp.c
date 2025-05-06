@@ -84,7 +84,7 @@ void power_on_run_handler(void)
                    Set_TimerTiming_Number_Value();
                    
               }
-              else if(gpro_t.set_timer_timing_doing_value == 0 &&  run_t.set_temperature_special_flag   >0 &&  run_t.set_temperature_special_flag != 0xff ){
+              else if((gpro_t.set_timer_timing_doing_value == 0 || gpro_t.set_timer_timing_doing_value == 3)&&  run_t.set_temperature_special_flag   >0 &&  run_t.set_temperature_special_flag != 0xff ){
 
                    //
                    disp_smg_blink_set_tempeature_value();
@@ -110,7 +110,7 @@ void power_on_run_handler(void)
 				   break;
                     
                     case 2: //display 1:   timing times  2: timer times.
-                        if(gpro_t.set_timer_timing_doing_value==0){
+                        if(gpro_t.set_timer_timing_doing_value==0 || gpro_t.set_timer_timing_doing_value==3){
                         if(run_t.ptc_warning ==0 && run_t.fan_warning ==0){ //read main board ptc_warning of ref.
                             Display_SmgTiming_Value();
 
@@ -153,7 +153,7 @@ void detected_ptc_or_fan_warning_fun(void)
 void mode_key_fun(void)
 {
 
-   if(gpro_t.set_timer_timing_doing_value  == 0){
+   if(gpro_t.set_timer_timing_doing_value  == 0 || gpro_t.set_timer_timing_doing_value  == 3){
   
        gpro_t.set_timer_timing_doing_value = 1;
        run_t.gTimer_key_timing = 0;
@@ -441,17 +441,23 @@ void key_add_fun(void)
 
     switch(gpro_t.set_timer_timing_doing_value)
     {
-        case 0:  // 设置温度增加
+
+        case 3:
+
+		case 0:  // 设置温度增加
             SendData_Buzzer();
             set_temperature_value(+1);
-            break;
+        break;
+
+		
 
         case 1:  // 设置定时增加（每次加60分钟）
            // SendData_Buzzer();
             run_t.gTimer_key_timing = 0;
 
             adjust_timer_minutes(1);  // 固定每次加60分钟
-            break;
+        break;
+			
     }
 }
 
@@ -562,10 +568,16 @@ void key_dec_fun(void)
 
     switch(gpro_t.set_timer_timing_doing_value)
     {
-        case 0:  // 设置温度减少
+
+       case 3:
+
+
+	   case 0:  // 设置温度减少
             SendData_Buzzer();
             set_temperature_value(-1);
-            break;
+        break;
+
+		
 
         case 1:  // 设置定时减少（每次减60分钟）
             //SendData_Buzzer();

@@ -111,7 +111,7 @@ void SendData_Temp_Data(uint8_t tdata) {
  ****************************************************************************************************/
 void SendData_ToMainboard_Data(uint8_t cmd,uint8_t tdata,uint8_t datalen) 
 {
-    fillFrame(cmd, HAS_DATA, &tdata, 1);
+    fillFrame(cmd, HAS_DATA, &tdata, datalen);
     sendUartData(outputBuf, (7+datalen));
 }
 

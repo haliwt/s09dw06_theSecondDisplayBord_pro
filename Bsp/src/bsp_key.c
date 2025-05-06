@@ -214,7 +214,7 @@ void disp_smg_blink_set_tempeature_value(void)
 {
      static uint8_t counter_times;
 	  //waiting for 4 s 
-	  if(run_t.gTimer_key_temp_timing > 1 && run_t.set_temperature_special_flag ==1 && gpro_t.set_timer_timing_doing_value==0){
+	  if(run_t.gTimer_key_temp_timing > 1 && run_t.set_temperature_special_flag ==1 && (gpro_t.set_timer_timing_doing_value==0 || gpro_t.set_timer_timing_doing_value==3)){
 			
 			
 			run_t.set_temperature_special_flag =2;
@@ -222,7 +222,7 @@ void disp_smg_blink_set_tempeature_value(void)
 
 	 }
 	 //temperature of smg of LED blink .
-	  if(run_t.set_temperature_special_flag ==2 && gpro_t.set_timer_timing_doing_value==0){
+	  if(run_t.set_temperature_special_flag ==2 && (gpro_t.set_timer_timing_doing_value==0 ||gpro_t.set_timer_timing_doing_value==3)){
 	  	
 	  	 
 		  if(run_t.gTimer_set_temp_times  > 0  && run_t.set_temperature_special_flag !=0xff){ // 15ms * 4 =60ms
