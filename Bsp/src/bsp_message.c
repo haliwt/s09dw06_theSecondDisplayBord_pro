@@ -382,38 +382,13 @@ void receive_data_from_mainboard(uint8_t *pdata)
 
       break;
 
-	  case 0x11: //main board set temperature value 
-	  
-          
-		  if(pdata[3] == 0x0F){
-		  
-			if(pdata[4]== 0x01){ // one only data 
-
-		  
-				
-			gpro_t.set_up_temperature_value =pdata[5];//warning
-	  
-			 gpro_t.g_manual_shutoff_dry_flag = 0 ;//  allow open dry function
-             run_t.set_temperature_special_flag=1;
-             run_t.gTimer_key_temp_timing=0;
-
-			   run_t.set_temperature_decade_value = gpro_t.set_up_temperature_value / 10 ;
-               run_t.set_temperature_unit_value  =gpro_t.set_up_temperature_value % 10; //
-
-               TM1639_Write_2bit_SetUp_TempData(run_t.set_temperature_decade_value,run_t.set_temperature_unit_value,0);
-				
-	  
-			 
-
-				}
-		  	}
-	break;
+	
 
 
      //接收的是数据
 
       case temp_hum_data: //温度,湿度数据
-
+        if(pdata[3]==0x0F){
         if(pdata[4] == 0x02){ //数据,two 
             
             run_t.gReal_humtemp[0] = pdata[5] ;//gpro_t.humidity_real_value = pdata[5];
@@ -421,10 +396,11 @@ void receive_data_from_mainboard(uint8_t *pdata)
              run_t.gReal_humtemp[1] = pdata[6];
 
         }
-        else if(pdata[4] == 0x01){ //数据)
+        else if(pdata[4] == 0x01){ //数据,one
 
 
 
+        }
         }
       break;
 
@@ -438,7 +414,7 @@ void receive_data_from_mainboard(uint8_t *pdata)
 
       case beijing_times_data: //表示时间：小时，分，秒
 
-        if(pdata[4] == 0x03){ //数据
+        if(pdata[4] == 0x03){ //数据,has three data
 
             if(pdata[5] < 24){ //WT.EDIT 2024.11.23
 
@@ -508,6 +484,33 @@ void receive_data_from_mainboard(uint8_t *pdata)
 
         }
       break;
+
+	  case 0x2A: //main board set temperature value 
+	  
+          
+		  if(pdata[3] == 0x0F){
+		  
+			if(pdata[4]== 0x01){ // one only data 
+
+		  
+				
+			gpro_t.set_up_temperature_value =pdata[5];//warning
+	  
+			 gpro_t.g_manual_shutoff_dry_flag = 0 ;//  allow open dry function
+             gpro_t.set_temp_value_success=1;//run_t.set_temperature_special_flag=1;
+             run_t.gTimer_key_temp_timing=0;
+
+			   run_t.set_temperature_decade_value = gpro_t.set_up_temperature_value / 10 ;
+               run_t.set_temperature_unit_value  =gpro_t.set_up_temperature_value % 10; //
+
+              // TM1639_Write_2bit_SetUp_TempData(run_t.set_temperature_decade_value,run_t.set_temperature_unit_value,0);
+				
+	  
+			 
+
+				}
+		  	}
+	break;
 
      case copy_cmd: // copy send cmd acknowlege
           rx_answer_data_form_mainboard(pdata);

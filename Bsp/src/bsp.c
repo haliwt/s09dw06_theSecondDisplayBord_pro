@@ -253,10 +253,24 @@ void power_off_run_handler(void)
  * 
  **********************************************************************************/
 void set_temperature_value(int8_t delta) {
-    int8_t new_temp = gpro_t.set_up_temperature_value + delta;
+    int8_t new_temp;
+	static uint8_t temperature_init_value;
 
-    if (new_temp < 20) new_temp = 20;
-    if (new_temp > 40) new_temp = 40;
+	if (temperature_init_value == 0 && gpro_t.set_temp_value_success==0){
+        temperature_init_value++;
+        gpro_t.set_up_temperature_value = (delta > 0) ? 21 : 39;
+	    new_temp = gpro_t.set_up_temperature_value;
+    }
+	else{
+
+	   	new_temp = gpro_t.set_up_temperature_value + delta;
+	    if (new_temp < 20) new_temp = 20;
+        if (new_temp > 40) new_temp = 40;
+   }
+
+	
+
+   
 
     gpro_t.set_up_temperature_value = new_temp;
 
@@ -268,7 +282,7 @@ void set_temperature_value(int8_t delta) {
     gpro_t.g_manual_shutoff_dry_flag   = 0;
     set_temp_flag                      = 1;
 
-    //SendData_ToMainboard(new_temp,0x01);
+    //SendData_ToMainboard(0x2A,new_temp,0x01);
     //osDelay(5);
 
     TM1639_Write_2bit_SetUp_TempData(run_t.set_temperature_decade_value, run_t.set_temperature_unit_value, 0);
@@ -568,7 +582,7 @@ void SetDataTemperatureValue(void)
 
      //SendData_Tx_Data(0x11,gpro_t.set_up_temperature_value);
      SendData_ToMainboard(0x2A,gpro_t.set_up_temperature_value,0x01);
-     
+     osDelay(5);
 	}  
 
 
