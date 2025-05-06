@@ -249,17 +249,59 @@ void power_off_run_handler(void)
 /*********************************************************************************
  * 
  * Function Name:void mouse_on_off_handler(void)
- * 
+ * // 设置温度并做边界检查
  * 
  **********************************************************************************/
+void set_temperature_value(int8_t delta) {
+    int8_t new_temp = gpro_t.set_up_temperature_value + delta;
+
+    if (new_temp < 20) new_temp = 20;
+    if (new_temp > 40) new_temp = 40;
+
+    gpro_t.set_up_temperature_value = new_temp;
+
+    run_t.set_temperature_decade_value = new_temp / 10;
+    run_t.set_temperature_unit_value   = new_temp % 10;
+
+    run_t.set_temperature_special_flag = 1;
+    run_t.gTimer_key_temp_timing       = 0;
+    gpro_t.g_manual_shutoff_dry_flag   = 0;
+    set_temp_flag                      = 1;
+
+    //SendData_ToMainboard(new_temp,0x01);
+    //osDelay(5);
+
+    TM1639_Write_2bit_SetUp_TempData(run_t.set_temperature_decade_value, run_t.set_temperature_unit_value, 0);
+}
 
 /*******************************************************
-*
-*Function Name: void bsp_plasma_handler(uint8_t data)
-*Function :
-*
-*
+	*
+	*Function Name: void bsp_plasma_handler(uint8_t data)
+	*Function :
+	*
+	*
 *******************************************************/
+void adjust_timer_minutes(int8_t delta_min) {
+    int32_t total_min = run_t.temporary_timer_dispTime_hours * 60 + run_t.temporary_timer_dispTime_minutes;
+    total_min += delta_min;
+
+    if (total_min < 0) {
+        total_min += 24 * 60;  // 循环处理负值
+    }
+
+    total_min %= (24 * 60);  // 保证在一天范围内
+
+    run_t.temporary_timer_dispTime_hours   = total_min / 60;
+    run_t.temporary_timer_dispTime_minutes = total_min % 60;
+
+    run_t.hours_two_decade_bit    = run_t.temporary_timer_dispTime_hours / 10;
+    run_t.hours_two_unit_bit      = run_t.temporary_timer_dispTime_hours % 10;
+    run_t.minutes_one_decade_bit  = run_t.temporary_timer_dispTime_minutes / 10;
+    run_t.minutes_one_unit_bit    = run_t.temporary_timer_dispTime_minutes % 10;
+
+    // TM1639_Write_4Bit_Time(run_t.hours_two_decade_bit, run_t.hours_two_unit_bit,
+    //                        run_t.minutes_one_decade_bit, run_t.minutes_one_unit_bit, 0);
+}
 
 
 /******************************************************
@@ -268,6 +310,7 @@ void power_off_run_handler(void)
 *
 *
 ******************************************************/
+#if 0
 void key_add_fun(void)
 {
     if(run_t.ptc_warning ==0){
@@ -297,7 +340,7 @@ void key_add_fun(void)
 
 		}
 		 if(gpro_t.set_up_temperature_value > 40)gpro_t.set_up_temperature_value =40;
-	     SendData_SetTemp_Data(gpro_t.set_up_temperature_value);
+	     SendData_ToMainboard(gpro_t.set_up_temperature_value);
 		osDelay(5);
 
         run_t.set_temperature_decade_value = gpro_t.set_up_temperature_value / 10 ;
@@ -368,12 +411,36 @@ void key_add_fun(void)
    }
 
 }
+#endif 
+void key_add_fun(void)
+{
+    if(run_t.ptc_warning != 0) return;
+
+    run_t.gTimer_time_colon = 0;
+
+    switch(gpro_t.set_timer_timing_doing_value)
+    {
+        case 0:  // 设置温度增加
+            SendData_Buzzer();
+            set_temperature_value(+1);
+            break;
+
+        case 1:  // 设置定时增加（每次加60分钟）
+            SendData_Buzzer();
+            run_t.gTimer_key_timing = 0;
+
+            adjust_timer_minutes(60);  // 固定每次加60分钟
+            break;
+    }
+}
+
 /******************************************************
 *
 *Function Name:void key_dec_fun(void)
 *
 *
 ******************************************************/
+#if 0
 void key_dec_fun(void)
 {
     
@@ -384,7 +451,7 @@ void key_dec_fun(void)
 
     case 0: //set temperature value
 
-      //  SendData_SetTemp_Data(gpro_t.set_up_temperature_value);//SendData_Buzzer();
+      //  SendData_ToMainboard(gpro_t.set_up_temperature_value);//SendData_Buzzer();
          
 
         //setup temperature of value,minimum 20,maximum 40
@@ -406,7 +473,7 @@ void key_dec_fun(void)
        
           if(gpro_t.set_up_temperature_value<20)gpro_t.set_up_temperature_value=20;
 
-		 SendData_SetTemp_Data(gpro_t.set_up_temperature_value);//SendData_Tx_Data(0x11,gpro_t.set_up_temperature_value);
+		 SendData_ToMainboard(gpro_t.set_up_temperature_value);//SendData_Tx_Data(0x11,gpro_t.set_up_temperature_value);
          osDelay(5);
 
         run_t.set_temperature_decade_value = gpro_t.set_up_temperature_value / 10 ;
@@ -467,6 +534,26 @@ void key_dec_fun(void)
 
 
 }
+#endif 
+void key_dec_fun(void)
+{
+    if(run_t.ptc_warning != 0) return;
+
+    switch(gpro_t.set_timer_timing_doing_value)
+    {
+        case 0:  // 设置温度减少
+            SendData_Buzzer();
+            set_temperature_value(-1);
+            break;
+
+        case 1:  // 设置定时减少（每次减60分钟）
+            SendData_Buzzer();
+            run_t.gTimer_key_timing = 0;
+
+            adjust_timer_minutes(-60);  // 固定每次减60分钟
+            break;
+    }
+}
 
 /*********************************************************************************
  * 
@@ -480,7 +567,7 @@ void SetDataTemperatureValue(void)
 	 set_temp_flag++;
 
      //SendData_Tx_Data(0x11,gpro_t.set_up_temperature_value);
-     SendData_SetTemp_Data(gpro_t.set_up_temperature_value);
+     SendData_ToMainboard(0x2A,gpro_t.set_up_temperature_value,0x01);
      
 	}  
 
@@ -514,6 +601,7 @@ void compare_temp_value(void)
       
 	   	// SendData_Tx_Data(0x11,gpro_t.set_up_temperature_value);
 		   SendData_Set_Command(dry_notice_cmd,0x01);//SendData_Set_Command(DRY_ON_NO_BUZZER);
+		   osDelay(5);
 		   //gpro_t.send_ack_cmd = check_ack_dry_notice_on;
 		   //gpro_t.gTimer_again_send_power_on_off =0;
 
@@ -526,6 +614,7 @@ void compare_temp_value(void)
          LED_DRY_OFF();
        // SendData_Tx_Data(0x11,gpro_t.set_up_temperature_value);
     	 SendData_Set_Command(dry_notice_cmd,0x0);//SendData_Set_Command(DRY_OFF_NO_BUZZER);
+    	  osDelay(5);
     	// gpro_t.send_ack_cmd = check_ack_dry_notice_off;
 		// gpro_t.gTimer_again_send_power_on_off =0;
          }

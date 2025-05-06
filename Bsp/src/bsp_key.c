@@ -232,8 +232,13 @@ void disp_smg_blink_set_tempeature_value(void)
 			  
 			//  SendData_Tx_Data(0x11,gpro_t.set_up_temperature_value);
 			  TM1639_Write_2bit_SetUp_TempData(run_t.set_temperature_decade_value,run_t.set_temperature_unit_value,0);
-              compare_temp_value();
+             
 			  Display_DHT11_Value();
+
+			   SendData_ToMainboard(0x2A,gpro_t.set_up_temperature_value,0x01); //WT.EDIT 2025.05.06
+    		   osDelay(5);
+			   compare_temp_value();
+			  
               
              }
 	     }

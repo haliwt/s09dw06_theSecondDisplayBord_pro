@@ -263,7 +263,7 @@ void receive_data_from_mainboard(uint8_t *pdata)
             run_t.gDry =1 ;//&& run_t.gPlasma ==1  && run_t.gUltransonic==1
             gpro_t.g_manual_shutoff_dry_flag = 0;
         }
-        else if(pdata[3] == 0x0){
+        else if(pdata[4] == 0x0){
 
             gpro_t.g_manual_shutoff_dry_flag = 0;
             run_t.gDry =0;
@@ -283,7 +283,7 @@ void receive_data_from_mainboard(uint8_t *pdata)
 
 
 	        }
-	        else if(pdata[3] == 0x0){
+	        else if(pdata[4] == 0x0){
 	          
 	         run_t.gPlasma =0;
 
@@ -324,7 +324,7 @@ void receive_data_from_mainboard(uint8_t *pdata)
 		run_t.gTimer_wifi_connect_counter =0; //120s counte start
 
 		}
-		else if(pdata[3] == 0x0){ //close
+		else if(pdata[4] == 0x0){ //close
 
 		}
 
@@ -351,7 +351,7 @@ void receive_data_from_mainboard(uint8_t *pdata)
 	            SendData_Set_Command(0x22,0x0); //close ptc ,but don't buzzer sound .
 
 	        }
-	        else if(pdata[3] == 0x0){ //close
+	        else if(pdata[4] == 0x0){ //close
 
 	           run_t.ptc_warning = 0;
 

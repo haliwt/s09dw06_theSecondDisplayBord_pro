@@ -27,7 +27,7 @@ void SendData_Tx_Data(uint8_t dcmd,uint8_t ddata);
 
 
 
-void SendData_Time_Data(uint8_t tdata);
+void SendData_Time_Data(uint8_t tdata,uint8_t datalen);
 
 void SendData_Buzzer(void);
 
@@ -37,7 +37,7 @@ void SendData_Set_Command(uint8_t cmd,uint8_t data);
 
 void SendData_Temp_Data(uint8_t tdata);
 
-void SendData_SetTemp_Data(uint8_t tdata);
+void SendData_ToMainboard(uint8_t cmd,uint8_t tdata,uint8_t datalen);
 
 
 void SendWifiData_Answer_Cmd(uint8_t cmd ,uint8_t data);

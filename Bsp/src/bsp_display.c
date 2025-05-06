@@ -103,7 +103,14 @@ void Display_Error_Digital(uint8_t errnumbers,uint8_t sel)
 //	
 //}
 
-
+/********************************************************************************
+	*
+	*Functin Name: void Display_TimeColon_Blink_Fun(void)
+	*Function : 
+	*Input Ref:  NO
+	*Return Ref: NO
+	*
+********************************************************************************/
 void Display_TimeColon_Blink_Fun(void)
 {
 
