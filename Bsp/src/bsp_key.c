@@ -146,10 +146,33 @@ void Set_TimerTiming_Number_Value(void)
    //set timer timing value 
     if(run_t.gTimer_key_timing > 3){
 		run_t.gTimer_key_timing =0;		
-		gpro_t.set_timer_timing_doing_value  =0 ;
+		gpro_t.set_timer_timing_doing_value ++ ;
 	    run_t.gTimer_timer_timing_counter=0;
 	
 	 }
+
+    }
+    if(gpro_t.set_timer_timing_doing_value==2){
+    	gpro_t.set_timer_timing_doing_value++;
+		if(run_t.temporary_timer_dispTime_hours >0 ){
+			gpro_t.set_timer_timing_value_success  = TIMER_SUCCESS;
+			run_t.gTimer_timer_timing_counter = 0;
+
+			run_t.timer_dispTime_hours = run_t.temporary_timer_dispTime_hours ;
+			run_t.timer_dispTime_minutes = 0;
+
+			Display_Timing(run_t.timer_dispTime_hours,run_t.timer_dispTime_minutes);
+
+
+		}
+		else{
+
+			gpro_t.set_timer_timing_value_success  = 0;
+
+
+
+		}
+
 
     }
 }
@@ -235,7 +258,7 @@ void disp_smg_blink_set_tempeature_value(void)
              
 			  Display_DHT11_Value();
 
-			   SendData_ToMainboard(0x2A,gpro_t.set_up_temperature_value,0x01); //WT.EDIT 2025.05.06
+			   SendData_ToMainboard_Data(0x2A,gpro_t.set_up_temperature_value,0x01); //WT.EDIT 2025.05.06
     		   osDelay(5);
 			   compare_temp_value();
 			  

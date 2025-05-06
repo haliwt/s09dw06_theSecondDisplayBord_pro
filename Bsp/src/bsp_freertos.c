@@ -391,8 +391,8 @@ static void vTaskStart(void *pvParameters)
             }
             else if((ulValue & ADD_BIT_3 ) != 0){   /* 接收到消息，检测那个位被按下 */
             	 if(run_t.gPower_On == power_on){
-									 key_t.key_add_flag =1;
-									 key_t.key_wifi_flag =0;
+					 key_t.key_add_flag =1;
+					 key_t.key_wifi_flag =0;
             	                  
             	  }
 

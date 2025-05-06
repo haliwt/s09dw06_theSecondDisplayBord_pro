@@ -512,6 +512,32 @@ void receive_data_from_mainboard(uint8_t *pdata)
 		  	}
 	break;
 
+	case mainboard_set_timer_value:
+
+	     if(pdata[3] == 0x0F){
+		  
+			if(pdata[4]== 0x01){ // one only data 
+
+		      gpro_t.set_timer_timing_doing_value = 1;
+			  run_t.gTimer_key_timing = 0;
+              run_t.gTimer_smg_blink_times =0;
+			  gpro_t.set_timer_first_smg_blink_flag=0;
+				
+			 run_t.temporary_timer_dispTime_hours=pdata[5];
+	  
+			 	 run_t.hours_two_decade_bit    = run_t.temporary_timer_dispTime_hours / 10;
+    			run_t.hours_two_unit_bit      = run_t.temporary_timer_dispTime_hours % 10;
+   				 run_t.minutes_one_decade_bit  = 0;
+    			run_t.minutes_one_unit_bit    = 0;
+				
+	  
+			 
+
+				}
+		  	}
+
+	break;
+
      case copy_cmd: // copy send cmd acknowlege
           rx_answer_data_form_mainboard(pdata);
 
