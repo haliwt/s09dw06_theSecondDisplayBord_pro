@@ -497,7 +497,8 @@ void receive_data_from_mainboard(uint8_t *pdata)
 			gpro_t.set_up_temperature_value =pdata[5];//warning
 	  
 			 gpro_t.g_manual_shutoff_dry_flag = 0 ;//  allow open dry function
-             gpro_t.set_temp_value_success=1;//run_t.set_temperature_special_flag=1;
+             gpro_t.set_temp_value_success=1;//
+             //run_t.set_temperature_special_flag=1;
              run_t.gTimer_key_temp_timing=0;
 
 			   run_t.set_temperature_decade_value = gpro_t.set_up_temperature_value / 10 ;
