@@ -50,7 +50,7 @@ void bsp_KeyScan(void)
 
 
 	    }
-	     else if(AI_KEY_VALUE()==KEY_DOWN){
+	     else if(WIFI_KEY_VALUE()==KEY_DOWN){
              if(run_t.gPower_On == power_on){
             	 key_t.key_wifi_flag= 1;
     	    	 keyvalue = KEY_AI_DOWN;

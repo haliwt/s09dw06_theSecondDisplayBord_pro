@@ -17,7 +17,7 @@
 #define MOUSE_KEY_VALUE()              HAL_GPIO_ReadPin(GPIOB,MOUSE_KEY_Pin)
 #define PLASMA_KEY_VALUE()              HAL_GPIO_ReadPin(GPIOB,PLASMA_KEY_Pin)
 #define DRY_KEY_VALUE()              HAL_GPIO_ReadPin(GPIOB,DRY_KEY_Pin)
-#define AI_KEY_VALUE()              HAL_GPIO_ReadPin(GPIOB,AI_KEY_Pin)
+#define WIFI_KEY_VALUE()              HAL_GPIO_ReadPin(GPIOB,AI_KEY_Pin)
 
 
 

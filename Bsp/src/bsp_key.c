@@ -15,7 +15,7 @@ uint8_t KEY_Scan(void)
   key_t.read = _KEY_ALL_OFF; //0xFF 
 
 
-    if(AI_KEY_VALUE() ==1 ) //WIFI_KEY_ID = 0x80
+    if(WIFI_KEY_VALUE() ==1 ) //WIFI_KEY_ID = 0x80
 	{
 		key_t.read &= ~0x80; // 0x1f & 0x7F =  0x7F
 	}

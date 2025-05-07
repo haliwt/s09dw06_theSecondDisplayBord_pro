@@ -161,8 +161,8 @@ static void vTaskRunPro(void *pvParameters)
 	
     while(1)
     {
-
-    if(AI_KEY_VALUE() == KEY_DOWN &&   key_t.key_wifi_flag <60 && run_t.gPower_On == power_on){
+     //wifi_key 
+     if(WIFI_KEY_VALUE() == KEY_DOWN &&   key_t.key_wifi_flag <60 && run_t.gPower_On == power_on){
         	key_t.key_wifi_flag++; 
         
          if(key_t.key_wifi_flag >30){
@@ -175,8 +175,7 @@ static void vTaskRunPro(void *pvParameters)
    
         }
 	
-       //KEY BY INTERRUPT GPIO
-       if(key_t.key_power_flag ==1){ //&& POWER_KEY_VALUE() ==KEY_UP){
+      if(key_t.key_power_flag ==1){ //&& POWER_KEY_VALUE() ==KEY_UP){
 			key_t.key_power_flag ++;
 
 			    if(run_t.gPower_On == power_off){
@@ -596,7 +595,7 @@ void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
 
    case MODEL_KEY_Pin:
      
-//      if(AI_KEY_VALUE() == KEY_DOWN){
+//      if(WIFI_KEY_VALUE() == KEY_DOWN){
 //             xTaskNotifyFromISR(xHandleTaskStart,  /* 目标任务 */
 //               AI_BIT_7,     /* 设置目标任务事件标志位bit0  */
 //               eSetBits,  /* 将目标任务的事件标志位与BIT_0进行或操作， 将结果赋值给事件标志位 */
