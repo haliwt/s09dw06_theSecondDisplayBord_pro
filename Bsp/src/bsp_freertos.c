@@ -213,7 +213,7 @@ static void vTaskRunPro(void *pvParameters)
 			else if(key_t.key_plasma_flag ==1){// && PLASMA_KEY_VALUE()==KEY_UP){
 				 key_t.key_plasma_flag ++;
 
-             if(gpro_t.set_timer_timing_doing_value==0){
+             if(gpro_t.set_timer_timing_doing_value==0 ||gpro_t.set_timer_timing_doing_value==3){
 				 if(run_t.gPlasma == 1){
         			 run_t.gPlasma = 0;
                      SendData_Set_Command(plasma_cmd,0x0); //
@@ -237,7 +237,7 @@ static void vTaskRunPro(void *pvParameters)
 			else if(key_t.key_dry_flag ==1){ // && DRY_KEY_VALUE()==KEY_UP){
 				 key_t.key_dry_flag ++;
 
-             if(gpro_t.set_timer_timing_doing_value==0){
+             if(gpro_t.set_timer_timing_doing_value==0 || gpro_t.set_timer_timing_doing_value==3){
 				 if(run_t.gDry ==0){
                    SendData_Set_Command(dry_cmd,0x01); //
                     osDelay(5);
@@ -263,7 +263,7 @@ static void vTaskRunPro(void *pvParameters)
 			}
 			else if(key_t.key_mouse_flag ==1){
 				 key_t.key_mouse_flag ++;
-                if(gpro_t.set_timer_timing_doing_value==0){
+                if(gpro_t.set_timer_timing_doing_value==0 || gpro_t.set_timer_timing_doing_value==3){
 				 if(run_t.gMouse ==0){
         		   
                    SendData_Set_Command(mouse_cmd,0x01); //
@@ -304,7 +304,7 @@ static void vTaskRunPro(void *pvParameters)
 	   RunLocal_Dht11_Data_Process();
        set_timer_fun_led_blink();
        wifi_connect_state_fun(run_t.wifi_led_fast_blink);
-       if(power_on_theFirst_times < 10 && gpro_t.set_timer_timing_doing_value==0){
+       if(power_on_theFirst_times < 10 && (gpro_t.set_timer_timing_doing_value==0 || gpro_t.set_timer_timing_doing_value==3)){
          power_on_theFirst_times ++;
          Display_DHT11_Value();
 

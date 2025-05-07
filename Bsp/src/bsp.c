@@ -89,7 +89,6 @@ void power_on_run_handler(void)
               }
               else if(gpro_t.set_timer_timing_doing_value == 0 &&  run_t.set_temperature_special_flag   >0 &&  run_t.set_temperature_special_flag != 0xff ){
 
-                   //
                    disp_smg_blink_set_tempeature_value();
 	              
 						
@@ -113,7 +112,7 @@ void power_on_run_handler(void)
 				   break;
                     
                     case 2: //display 1:   timing times  2: timer times.
-                        if(gpro_t.set_timer_timing_doing_value==0){
+                        if(gpro_t.set_timer_timing_doing_value==0 || gpro_t.set_timer_timing_doing_value==3){ //WT.EDIT 2025.05.07
                         if(run_t.ptc_warning ==0 && run_t.fan_warning ==0){ //read main board ptc_warning of ref.
                             Display_SmgTiming_Value();
 
@@ -447,7 +446,9 @@ void key_add_fun(void)
 
     switch(gpro_t.set_timer_timing_doing_value)
     {
-        case 0:  // 设置温度增加
+
+	    case 3:
+		case 0:  // 设置温度增加
             SendData_Buzzer();
             set_temperature_value(+1);
             break;
@@ -568,7 +569,9 @@ void key_dec_fun(void)
 
     switch(gpro_t.set_timer_timing_doing_value)
     {
-        case 0:  // 设置温度减少
+
+        case 3:
+		case 0:  // 设置温度减少
             SendData_Buzzer();
             set_temperature_value(-1);
             break;
