@@ -64,12 +64,7 @@ void Power_On_Fun(void)
 
 	run_t.fan_warning=0;
 	run_t.ptc_warning=0;
-    if(run_t.display_beijing_time_flag ==0){
-		run_t.works_dispTime_hours=0;
-		run_t.works_dispTime_minutes=0;
-		run_t.gTimes_time_seconds =0;
-
-    }
+ 
 	
     run_t.gTimer_timer_timing_counter=0;
     gpro_t.set_timer_timing_value_success =0 ;
@@ -94,7 +89,7 @@ void Power_On_Fun(void)
 	  run_t.minutes_one_decade_bit =  minutes_one;
       
 	 TM1639_Write_4Bit_Time(hour_decade,run_t.hours_two_unit_bit,run_t.minutes_one_decade_bit,minutes_two,0);
-     Display_DHT11_Value();
+     //Display_DHT11_Value(); //WT.EIDT 2025.05.10
     
 }
 
@@ -115,9 +110,7 @@ void Power_Off_Fun(void)
 		run_t.gDry =0;
 		run_t.gMouse = 0;
 		
-        run_t.gPower_On =power_off;
-		run_t.gTimer_set_temp_times=0; //conflict with send temperatur value 
-       Power_Off_Led_Off();
+       
 
   
 } 

@@ -69,7 +69,7 @@ void RunLocal_Dht11_Data_Process(void)
   if(run_t.gTimer_display_dht11 > 9 && (gpro_t.set_timer_timing_doing_value==0||gpro_t.set_timer_timing_doing_value==3)){
 	    run_t.gTimer_display_dht11=0;
        	Display_DHT11_Value();
-        compare_temp_value();
+       
      
 	}
 
@@ -345,10 +345,7 @@ static void Smg_DisplayFan_Level_Value_Fun(uint8_t fan_level)
 ******************************************************************************/
 void Display_SmgTiming_Value(void)
 {
-
-  
-
-    switch(gpro_t.set_timer_timing_value_success){
+   switch(gpro_t.set_timer_timing_value_success){
 
 	   case TIMER_SUCCESS:
 
@@ -384,7 +381,7 @@ void Display_SmgTiming_Value(void)
         
 	    break;
 
-		case TIMER_NO: //NO_AI_MODE by timer timing  auto be changed AI_MODE
+		case TIMER_NORMAL_TIMING: //NO_AI_MODE by timer timing  auto be changed AI_MODE
 			
     
           if(run_t.gTimes_time_seconds > 59){
