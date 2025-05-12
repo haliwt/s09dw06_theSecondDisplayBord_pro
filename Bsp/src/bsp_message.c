@@ -6,7 +6,7 @@
  */
 #include "bsp.h"
 
-static void rx_answer_data_form_mainboard(uint8_t *pdata);
+static void copy_cmd_data_from_mainboard(uint8_t *pdata);
 
 
 
@@ -427,12 +427,7 @@ void receive_data_from_mainboard(uint8_t *pdata)
 
 	 break;
 
-	
-
-
-
-
-      case temp_warning: //temperature of high warning.
+	case temp_warning: //temperature of high warning.
 
 		if(pdata[3] == 0x00){
 			
@@ -659,7 +654,7 @@ void receive_data_from_mainboard(uint8_t *pdata)
 	break;
 
      case copy_cmd: // copy send cmd acknowlege
-          rx_answer_data_form_mainboard(pdata);
+          copy_cmd_data_from_mainboard(pdata);
 
      break;
 
@@ -668,7 +663,7 @@ void receive_data_from_mainboard(uint8_t *pdata)
  }
 
 
-static void rx_answer_data_form_mainboard(uint8_t *pdata )
+static void copy_cmd_data_from_mainboard(uint8_t *pdata )
 {
     
     switch(pdata[3]){
@@ -738,12 +733,13 @@ static void rx_answer_data_form_mainboard(uint8_t *pdata )
 
 	  if(pdata[5] == 0x01){  // link wifi
 
-          run_t.wifi_connect_state_flag = wifi_connect_null;
-	       run_t.wifi_led_fast_blink=1;
+	     run_t.wifi_led_fast_blink=1;
+		run_t.wifi_connect_state_flag = wifi_connect_null;
+		run_t.gTimer_wifi_connect_counter =0; //120s counte start
 			  
 	  
-			}
-			else{ //close
+	   }
+	  else{ //close
 	  
 			   run_t.wifi_connect_state_flag = wifi_connect_null;
 	            run_t.wifi_led_fast_blink=0;

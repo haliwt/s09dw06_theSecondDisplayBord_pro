@@ -168,12 +168,10 @@ static void vTaskRunPro(void *pvParameters)
 	if(run_t.gPower_On == power_on){
 
      if(key_t.key_wifi_flag==80){
-           
+         key_t.key_wifi_flag =0;
+	
         SendData_Set_Command(wifi_cmd,0x01);
         osDelay(5);
-        key_t.key_wifi_flag =0;
-	
-
        }
 	   if(gpro_t.mode_key_shot_flag ==1){
 	   	    gpro_t.mode_key_shot_flag++;
