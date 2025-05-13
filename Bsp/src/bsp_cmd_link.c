@@ -104,14 +104,14 @@ void SendData_Temp_Data(uint8_t tdata) {
 }
 
 /****************************************************************************************************
- * Function Name: SendData_ToMainboard_Data
+ * Function Name: copy_cmd_data_from_mainboard
  * Function: 发送设置温度数据
  * Input Ref: tdata - 温度数据
  * Return Ref: 无
  ****************************************************************************************************/
-void SendData_ToMainboard_Data(uint8_t cmd,uint8_t tdata,uint8_t datalen) 
+void SendData_ToMainboard_Data(uint8_t cmd,uint8_t *pdata,uint8_t datalen) 
 {
-    fillFrame(cmd, HAS_DATA, &tdata, datalen);
+    fillFrame(cmd, HAS_DATA, pdata, datalen);
     sendUartData(outputBuf, (7+datalen));
 }
 

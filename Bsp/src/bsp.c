@@ -382,7 +382,7 @@ void adjust_timer_minutes(int8_t delta_min)
     run_t.minutes_one_unit_bit    = 0;
 	gpro_t.input_numbers_flag++;
 
-	SendData_ToMainboard_Data(0x4C, total_hour,0x01);
+	SendData_ToMainboard_Data(0x4C,&total_hour,0x01);
 	osDelay(5);
 
     // TM1639_Write_4Bit_Time(run_t.hours_two_decade_bit, run_t.hours_two_unit_bit,
@@ -615,7 +615,7 @@ void SetDataTemperatureValue(void)
 	 set_temp_flag++;
 
      //SendData_Tx_Data(0x11,gpro_t.set_up_temperature_value);
-     SendData_ToMainboard_Data(0x2A,gpro_t.set_up_temperature_value,0x01);
+     SendData_ToMainboard_Data(0x2A,&gpro_t.set_up_temperature_value,0x01);
      osDelay(5);
 	}  
 

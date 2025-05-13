@@ -345,6 +345,8 @@ static void Smg_DisplayFan_Level_Value_Fun(uint8_t fan_level)
 ******************************************************************************/
 void Display_SmgTiming_Value(void)
 {
+  // uint8_t dataToSend[3];
+
    switch(gpro_t.set_timer_timing_value_success){
 
 	   case TIMER_SUCCESS:
@@ -359,6 +361,10 @@ void Display_SmgTiming_Value(void)
 					 
 				   run_t.timer_dispTime_hours -- ;
 				   run_t.timer_dispTime_minutes =59;
+				
+				   uint8_t dataToSend[3] = {run_t.timer_dispTime_hours,run_t.timer_dispTime_minutes, run_t.gTimer_timer_timing_counter}; // 要发送的 3 个数据
+           SendData_ToMainboard_Data(0x5C, dataToSend, 3); // cmd=0x1A, 数据长度=3
+                    osDelay(5);
 		         }
 
 				
@@ -405,38 +411,8 @@ void Display_SmgTiming_Value(void)
 			break;
 
 	   	}
+
 }
-
-//  	}
-//    else{
-
-
-//           if(run_t.gTimes_time_seconds > 59){
-//    		   run_t.gTimes_time_seconds=0;
-//    		 
-//    		   run_t.works_dispTime_minutes++; //1 minute 
-//    		
-//    		   run_t.send_app_wokes_minutes_two++;
-//    		   if(run_t.works_dispTime_minutes> 59){ //1 hour
-//    		   run_t.works_dispTime_minutes=0;
-//    		   run_t.works_dispTime_hours++;
-//    		   if(run_t.works_dispTime_hours > 24){
-//    		        run_t.works_dispTime_hours =0;
-//    		   }
-//    	      }
-//           }
-//  
-//         Display_Timing(run_t.works_dispTime_hours,run_t.works_dispTime_minutes);
-//         Timer_Timing_Donot_Display();
-
-//  }
-  
-
-
-
-
-
-
 /****************************************************************
  * 
  * Function Name:

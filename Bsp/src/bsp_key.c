@@ -263,7 +263,7 @@ void disp_smg_blink_set_tempeature_value(void)
              
 			  Display_DHT11_Value();
              
-			   SendData_ToMainboard_Data(0x2A,gpro_t.set_up_temperature_value,0x01); //WT.EDIT 2025.05.06
+			   SendData_ToMainboard_Data(0x2A,&gpro_t.set_up_temperature_value,0x01); //WT.EDIT 2025.05.06
     		   osDelay(5);
 			   compare_temp_value();
 			  // send_data =1;
