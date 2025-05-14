@@ -524,7 +524,7 @@ void receive_data_from_mainboard(uint8_t *pdata)
           
           run_t.works_dispTime_hours= pdata[5];// run_t.dispTime_hours  =  pdata[5];
           run_t.works_dispTime_minutes =pdata[6];//run_t.dispTime_minutes = pdata[6];
-          run_t.gTimes_time_seconds =  pdata[7];//run_t.gTimer_disp_time_seconds =  pdata[7];
+          run_t.gTimer_timing_seconds_counter =  pdata[7];//run_t.gTimer_disp_time_seconds =  pdata[7];
            }
 
 

@@ -28,6 +28,7 @@ extern KEY_T_TYPEDEF key_t;
 
 void process_keys(void) ;
 
+void SetDataTemperatureValue(void);
 
 
 #endif /* BSP_INC_BSP_KEY_APP_H_ */

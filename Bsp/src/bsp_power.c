@@ -66,11 +66,10 @@ void Power_On_Fun(void)
 	run_t.ptc_warning=0;
  
 	
-    run_t.gTimer_timer_timing_counter=0;
+    run_t.gTimer_timer_seconds_counter=0;
     gpro_t.set_timer_timing_value_success =0 ;
     gpro_t.set_temp_value_success = 0;
-   
-	run_t.timer_dispTime_hours =0;
+    run_t.timer_dispTime_hours =0;
 	run_t.timer_dispTime_minutes=0;
 		
         

@@ -147,7 +147,7 @@ void Set_TimerTiming_Number_Value(void)
     if(run_t.gTimer_key_timing > 3){
 		run_t.gTimer_key_timing =0;		
 		gpro_t.set_timer_timing_doing_value ++ ;
-	    run_t.gTimer_timer_timing_counter=0;
+	    run_t.gTimer_timer_seconds_counter=0;
 	
 	 }
 
@@ -157,7 +157,7 @@ void Set_TimerTiming_Number_Value(void)
     	gpro_t.set_timer_timing_doing_value++;
 		if(run_t.temporary_timer_dispTime_hours >0 ){
 			gpro_t.set_timer_timing_value_success  = TIMER_SUCCESS;
-			run_t.gTimer_timer_timing_counter = 0;
+			run_t.gTimer_timer_seconds_counter = 0;
 
 			run_t.timer_dispTime_hours = run_t.temporary_timer_dispTime_hours ;
 			if(default_numbers != gpro_t.input_numbers_flag){

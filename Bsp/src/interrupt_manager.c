@@ -62,8 +62,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		run_t.gTimer_time_colon++ ;
 		//--------------//
 
-        run_t.gTimer_timer_timing_counter ++;
-		run_t.gTimes_time_seconds ++;
+        run_t.gTimer_timer_seconds_counter ++;
+		run_t.gTimer_timing_seconds_counter ++;
      
 	
 	    run_t.gTimer_key_timing++;

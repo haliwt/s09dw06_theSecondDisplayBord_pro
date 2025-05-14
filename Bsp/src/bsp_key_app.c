@@ -14,6 +14,7 @@ KEY_T_TYPEDEF key_t;
 
 //void key_dec_fun(void);
 
+uint8_t  set_temp_flag;
 
 
 typedef struct {
@@ -21,6 +22,106 @@ typedef struct {
     uint8_t threshold;
     void (*onPress)(void);
 } KeyHandler;
+
+/*********************************************************************************
+ * 
+ * Function Name:void ai_on_off_handler(void)
+ * 
+ * 
+ **********************************************************************************/
+void SetDataTemperatureValue(void)
+{
+    if(set_temp_flag ==1){
+	 set_temp_flag++;
+
+     //SendData_Tx_Data(0x11,gpro_t.set_up_temperature_value);
+     SendData_ToMainboard_Data(0x2A,&gpro_t.set_up_temperature_value,0x01);
+     osDelay(5);
+	}  
+
+
+}
+
+/*********************************************************************************
+ * 
+ * Function Name:void mouse_on_off_handler(void)
+ * // 设置温度并做边界检查
+ * 
+ **********************************************************************************/
+void set_temperature_value(int8_t delta) 
+{
+    int8_t new_temp;
+	static uint8_t temperature_init_value;
+
+	if(temperature_init_value == 0 && gpro_t.set_temp_value_success==0){
+        temperature_init_value++;
+        gpro_t.set_up_temperature_value = (delta > 0) ? 21 : 39;
+	    new_temp = gpro_t.set_up_temperature_value;
+    }
+	else{
+
+	   	new_temp = gpro_t.set_up_temperature_value + delta;
+	    if (new_temp < 20) new_temp = 20;
+        if (new_temp > 40) new_temp = 40;
+   }
+
+	
+
+   
+
+    gpro_t.set_up_temperature_value = new_temp;
+
+    run_t.set_temperature_decade_value = new_temp / 10;
+    run_t.set_temperature_unit_value   = new_temp % 10;
+
+    run_t.set_temperature_special_flag = 1;
+    run_t.gTimer_key_temp_timing       = 0;
+    gpro_t.g_manual_shutoff_dry_flag   = 0;
+    set_temp_flag                      = 1;
+
+    //SendData_ToMainboard_Data(0x2A,new_temp,0x01);
+    //osDelay(5);
+
+    TM1639_Write_2bit_SetUp_TempData(run_t.set_temperature_decade_value, run_t.set_temperature_unit_value, 0);
+}
+
+/*******************************************************
+	*
+	*Function Name: void bsp_plasma_handler(uint8_t data)
+	*Function :
+	*
+	*
+*******************************************************/
+void adjust_timer_minutes(int8_t delta_min) 
+{
+    int8_t total_hour = run_t.temporary_timer_dispTime_hours ;
+    total_hour += delta_min;
+
+   if(total_hour > 24){
+         total_hour =0;
+   	}
+	else if (total_hour < 0) {
+        total_hour = 24 ;  // 循环处理负值
+    }
+
+   // total_hour %= 24 ;  // 保证在一天范围内
+
+    run_t.temporary_timer_dispTime_hours   = total_hour;
+    run_t.temporary_timer_dispTime_minutes = 0;
+
+    run_t.hours_two_decade_bit    = run_t.temporary_timer_dispTime_hours / 10;
+    run_t.hours_two_unit_bit      = run_t.temporary_timer_dispTime_hours % 10;
+    run_t.minutes_one_decade_bit  = 0;
+    run_t.minutes_one_unit_bit    = 0;
+	gpro_t.input_numbers_flag++;
+
+	SendData_ToMainboard_Data(0x4C,&total_hour,0x01);
+	osDelay(5);
+
+    // TM1639_Write_4Bit_Time(run_t.hours_two_decade_bit, run_t.hours_two_unit_bit,
+    //                        run_t.minutes_one_decade_bit, run_t.minutes_one_unit_bit, 0);
+}
+
 /****************************************************************
 	*
 	*Function Name :void handle_key(KeyHandler *handler) 
@@ -177,11 +278,13 @@ void key_add_fun(void)
 	    case 3:
 		case 0:  // 设置温度增加
             SendData_Buzzer();
+		    osDelay(5);
             set_temperature_value(+1);
             break;
 
         case 1:  // 设置定时增加（每次加60分钟）
-           // SendData_Buzzer();
+            SendData_Buzzer();
+			 osDelay(5);
             run_t.gTimer_key_timing = 0;
 
             adjust_timer_minutes(1);  // 固定每次加60分钟
@@ -200,11 +303,13 @@ void key_dec_fun(void)
         case 3:
 		case 0:  // 设置温度减少
             SendData_Buzzer();
+		     osDelay(5);
             set_temperature_value(-1);
             break;
 
         case 1:  // 设置定时减少（每次减60分钟）
-            //SendData_Buzzer();
+            SendData_Buzzer();
+			 osDelay(5);
             run_t.gTimer_key_timing = 0;
 
             adjust_timer_minutes(-1);  // 固定每次减60分钟

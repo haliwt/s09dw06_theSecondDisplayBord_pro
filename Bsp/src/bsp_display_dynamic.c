@@ -150,8 +150,8 @@ static void Display_Works_Time_Fun(void)
      static uint8_t works_timing_flag,alternate_flag;
 
 	 if(run_t.ptc_warning ==0 && run_t.fan_warning ==0){
-     if(run_t.gTimes_time_seconds > 59 ){
-            run_t.gTimes_time_seconds=0;
+     if(run_t.gTimer_timing_seconds_counter > 59 ){
+            run_t.gTimer_timing_seconds_counter=0;
             works_timing_flag =1;
 			run_t.works_dispTime_minutes++; //1 minute 
 		
@@ -249,8 +249,8 @@ static void Display_Works_Time_Fun(void)
 *****************************************************************/
 static void Timer_Timing_Donot_Display(void)
 {
-  if(run_t.gTimer_timer_timing_counter > 59 && gpro_t.set_timer_timing_value_success==TIMER_SUCCESS){
-    run_t.gTimer_timer_timing_counter =0;
+  if(run_t.gTimer_timer_seconds_counter > 59 && gpro_t.set_timer_timing_value_success==TIMER_SUCCESS){
+    run_t.gTimer_timer_seconds_counter =0;
     run_t.timer_dispTime_minutes -- ;
 
     if(run_t.timer_dispTime_minutes <  0 ){
@@ -262,7 +262,7 @@ static void Timer_Timing_Donot_Display(void)
 
 
     if(run_t.timer_dispTime_hours <0){ 
-    run_t.gTimer_timer_timing_counter = 57 ;
+    run_t.gTimer_timer_seconds_counter = 57 ;
     run_t.timer_dispTime_hours=0;
     run_t.timer_dispTime_minutes=0;
     power_off_run_handler();
@@ -284,8 +284,8 @@ static void Timer_Timing_Donot_Display(void)
 static void WorksTime_DonotDisplay_Fun(void)
 {
 //send to APP works times every minute onece
-   if(run_t.gTimes_time_seconds > 59 &&  gpro_t.set_timer_timing_value_success ==TIMER_SUCCESS ){
-		   run_t.gTimes_time_seconds=0;
+   if(run_t.gTimer_timing_seconds_counter > 59 &&  gpro_t.set_timer_timing_value_success ==TIMER_SUCCESS ){
+		   run_t.gTimer_timing_seconds_counter=0;
 		 
 		   run_t.works_dispTime_minutes++; //1 minute 
 		
@@ -352,8 +352,8 @@ void Display_SmgTiming_Value(void)
 	   case TIMER_SUCCESS:
 
 	   
-			   if(run_t.gTimer_timer_timing_counter > 59){
-			    run_t.gTimer_timer_timing_counter =0;
+			   if(run_t.gTimer_timer_seconds_counter > 59){
+			    run_t.gTimer_timer_seconds_counter =0;
 			
 				run_t.timer_dispTime_minutes -- ;
 			
@@ -362,7 +362,7 @@ void Display_SmgTiming_Value(void)
 				   run_t.timer_dispTime_hours -- ;
 				   run_t.timer_dispTime_minutes =59;
 				
-				   uint8_t dataToSend[3] = {run_t.timer_dispTime_hours,run_t.timer_dispTime_minutes, run_t.gTimer_timer_timing_counter}; // 要发送的 3 个数据
+				   uint8_t dataToSend[3] = {run_t.timer_dispTime_hours,run_t.timer_dispTime_minutes, run_t.gTimer_timer_seconds_counter}; // 要发送的 3 个数据
            SendData_ToMainboard_Data(0x5C, dataToSend, 3); // cmd=0x1A, 数据长度=3
                     osDelay(5);
 		         }
@@ -371,7 +371,7 @@ void Display_SmgTiming_Value(void)
 				
 				 if(run_t.timer_dispTime_hours < 0 ){
 				 
-					run_t.gTimer_timer_timing_counter = 57 ;
+					run_t.gTimer_timer_seconds_counter = 57 ;
 					run_t.timer_dispTime_hours=0;
 					run_t.timer_dispTime_minutes=0;
 		             
@@ -390,8 +390,8 @@ void Display_SmgTiming_Value(void)
 		case TIMER_NORMAL_TIMING: //NO_AI_MODE by timer timing  auto be changed AI_MODE
 			
     
-          if(run_t.gTimes_time_seconds > 59){
-    		   run_t.gTimes_time_seconds=0;
+          if(run_t.gTimer_timing_seconds_counter > 59){
+    		   run_t.gTimer_timing_seconds_counter=0;
     		 
     		   run_t.works_dispTime_minutes++; //1 minute 
     		

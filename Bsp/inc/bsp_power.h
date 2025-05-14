@@ -80,7 +80,7 @@ typedef struct __RUN{
 
    uint8_t gTemperature;
  
-   uint8_t gTimer_timer_timing_counter;
+   uint8_t gTimer_timer_seconds_counter;
    
   
   
@@ -137,7 +137,7 @@ typedef struct __RUN{
    uint8_t Timer_model_flag;
    uint8_t temperature_set_flag;
 
-   uint8_t gTimes_time_seconds;
+   uint8_t gTimer_timing_seconds_counter;
 
   
 	
