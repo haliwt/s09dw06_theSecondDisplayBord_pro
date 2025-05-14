@@ -630,7 +630,7 @@ void SetDataTemperatureValue(void)
 *******************************************************/
 void compare_temp_value(void)
 {
-    static uint8_t first_one_flag;
+    static uint8_t first_one_flag,first_set_flag;
 
 	if(gpro_t.gTimer_temp_compare_counter > 4){
 		
@@ -644,7 +644,7 @@ void compare_temp_value(void)
     
 
      if(gpro_t.set_up_temperature_value >run_t.gReal_humtemp[1]){ //PTC TURN ON
-
+          first_set_flag = 1;
       if(gpro_t.g_manual_shutoff_dry_flag == 0){ //allow open dry function 
          run_t.gDry =1;
     	
@@ -654,23 +654,36 @@ void compare_temp_value(void)
 		 }
      }
      else{ //PTC turn off 
+
+	     if(first_set_flag ==0 && gpro_t.set_up_temperature_value < run_t.gReal_humtemp[1]){
          run_t.gDry =0;
          LED_DRY_OFF();
       
     	 SendData_Set_Command(dry_notice_cmd,0x0);//SendData_Set_Command(DRY_OFF_NO_BUZZER);
     	  osDelay(5);
+	     }
+		 else if(first_set_flag ==1 && (gpro_t.set_up_temperature_value -1) < run_t.gReal_humtemp[1]){
+
+			 run_t.gDry =0;
+         LED_DRY_OFF();
+      
+    	 SendData_Set_Command(dry_notice_cmd,0x0);//SendData_Set_Command(DRY_OFF_NO_BUZZER);
+    	  osDelay(5);
+
+		 }
     
          }
    break;
 
    case 0:
+   	    #if 0
         if(run_t.gReal_humtemp[1] >39){
 
          run_t.gDry =0;
          LED_DRY_OFF();
       
-    	 SendData_Set_Command(dry_notice_cmd,0x0);//SendData_Set_Command(DRY_OFF_NO_BUZZER);
-    	 osDelay(5);
+    	// SendData_Set_Command(dry_notice_cmd,0x0);//SendData_Set_Command(DRY_OFF_NO_BUZZER);
+    	// osDelay(5);
         
          first_one_flag =1;
         }
@@ -682,22 +695,23 @@ void compare_temp_value(void)
                  run_t.gDry =1;
             
                 LED_DRY_ON();
-		        SendData_Set_Command(dry_notice_cmd,0x01);
-				osDelay(5);
+		       // SendData_Set_Command(dry_notice_cmd,0x01);
+				//osDelay(5);
 
              }
-		     else if(first_one_flag==0 && (run_t.gReal_humtemp[1] <39) && gpro_t.g_manual_shutoff_dry_flag == 0){
+		     else if(first_one_flag==0 && (run_t.gReal_humtemp[1] <=39) && gpro_t.g_manual_shutoff_dry_flag == 0){
 
               
                  run_t.gDry =1;
             
                 LED_DRY_ON();
-		        SendData_Set_Command(dry_notice_cmd,0x01);
-				osDelay(5);
+		        //SendData_Set_Command(dry_notice_cmd,0x01);
+				//osDelay(5);
 
 
 			 }
            }
+		#endif 
 	break;
 
       }
