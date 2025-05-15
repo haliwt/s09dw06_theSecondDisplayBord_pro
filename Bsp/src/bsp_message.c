@@ -241,7 +241,7 @@ void receive_data_from_mainboard(uint8_t *pdata)
             run_t.gRunCommand_label =RUN_NULL;
             //gpro_t.receive_copy_cmd = 1;
             power_on_handler();
-            
+            //SendData_ToMainboard_Data(uint8_t cmd,uint8_t *pdata,uint8_t datalen) ;
            }
            else{ //power off
 

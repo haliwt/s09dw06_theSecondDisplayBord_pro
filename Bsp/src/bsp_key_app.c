@@ -79,10 +79,11 @@ void set_temperature_value(int8_t delta)
     gpro_t.g_manual_shutoff_dry_flag   = 0;
     set_temp_flag                      = 1;
 
-    //SendData_ToMainboard_Data(0x2A,new_temp,0x01);
-    //osDelay(5);
+    SendData_ToMainboard_Data(0x2A,&new_temp,0x01);
+    osDelay(5);
 
     TM1639_Write_2bit_SetUp_TempData(run_t.set_temperature_decade_value, run_t.set_temperature_unit_value, 0);
+	
 }
 
 /*******************************************************
@@ -277,8 +278,8 @@ void key_add_fun(void)
 
 	    case 3:
 		case 0:  // 设置温度增加
-            SendData_Buzzer();
-		    osDelay(5);
+           // SendData_Buzzer();
+		   // osDelay(5);
             set_temperature_value(+1);
             break;
 
@@ -302,8 +303,8 @@ void key_dec_fun(void)
 
         case 3:
 		case 0:  // 设置温度减少
-            SendData_Buzzer();
-		     osDelay(5);
+            //SendData_Buzzer();
+		    // osDelay(5);
             set_temperature_value(-1);
             break;
 
@@ -313,7 +314,7 @@ void key_dec_fun(void)
             run_t.gTimer_key_timing = 0;
 
             adjust_timer_minutes(-1);  // 固定每次减60分钟
-            break;
+        break;
     }
 }
 /****************************************************************

@@ -98,6 +98,7 @@ void power_on_run_handler(void)
 
 			}
 			gpro_t.set_temp_value_success=0;
+			
 			run_t.gRunCommand_label= SPECIAL_DISP;
 
 
@@ -245,6 +246,7 @@ void power_off_run_handler(void)
 		   gpro_t.set_timer_timing_value_success=0;
 			run_t.timer_dispTime_hours=0;
 		    run_t.timer_dispTime_minutes=0;
+			
          run_t.power_off_flag = 1;
        break;
 
@@ -295,10 +297,7 @@ void compare_temp_value(void)
 
 	case 1:
 		
-	
-    
-     
-     if(gpro_t.set_up_temperature_value >run_t.gReal_humtemp[1]){ //PTC TURN ON
+		if(gpro_t.set_up_temperature_value >run_t.gReal_humtemp[1]){ //PTC TURN ON
         
       if(gpro_t.g_manual_shutoff_dry_flag == 0){ //allow open dry function 
          run_t.gDry =1;

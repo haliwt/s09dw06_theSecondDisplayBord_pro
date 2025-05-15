@@ -106,7 +106,7 @@ void freeRTOS_Handler(void)
 static void vTaskDecoderPro(void *pvParameters)
 {
     BaseType_t xResult;
-	//const TickType_t xMaxBlockTime = pdMS_TO_TICKS(500); /* 设置最大等待时间为30ms */
+	const TickType_t xMaxBlockTime = pdMS_TO_TICKS(5000); /* 设置最大等待时间为30ms */
 	uint32_t ulValue;
 	
 
@@ -187,7 +187,7 @@ static void vTaskRunPro(void *pvParameters)
        set_timer_fun_led_blink();
        wifi_connect_state_fun();
 	  // compare_temp_value();
-	    SetDataTemperatureValue();
+	  //  SetDataTemperatureValue();
 	 
        if(power_on_theFirst_times < 10 && (gpro_t.set_timer_timing_doing_value==0 || gpro_t.set_timer_timing_doing_value==3)){
          power_on_theFirst_times ++;

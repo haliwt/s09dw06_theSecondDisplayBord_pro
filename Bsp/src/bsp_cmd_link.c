@@ -57,6 +57,38 @@ static void fillFrame(uint8_t cmd, uint8_t frameType, uint8_t *data, uint8_t dat
     }
 }
 
+
+/****************************************************************************************************
+ * Function Name: static void fillFrame_copy(uint8_t cmd, uint8_t frameType, uint8_t *data, uint8_t dataLen)
+ * Function: 填充帧数据
+ * Input Ref: cmd - 命令, frameType - 帧类型, data - 数据指针, dataLen - 数据长度
+ * Return Ref: 无
+ ****************************************************************************************************/
+static void fillFrame_copy(uint8_t cmd, uint8_t frameType, uint8_t *data, uint8_t dataLen) 
+{
+    outputBuf[0] = FRAME_HEADER;       // 帧头
+    outputBuf[1] = DEVICE_NUMBER;      // 设备号
+    outputBuf[2] = 0xff ;                //copy command
+    outputBuf[3] = cmd;                // 命令
+    outputBuf[4] = frameType;          // 帧类型（0x0F 表示数据类型，其他表示命令类型）
+
+    if (frameType == HAS_DATA){       // 数据类型
+        outputBuf[5] = dataLen;        // 数据长度
+        for (uint8_t i = 0; i < dataLen; i++) {
+            outputBuf[6 + i] = data[i]; // 填充数据
+        }
+        outputBuf[6 + dataLen] = FRAME_END; // 帧尾
+        outputBuf[7 + dataLen] = bcc_check(outputBuf, 7 + dataLen); // 校验码
+        transferSize = 8 + dataLen;    // 计算帧总长度
+    } else {                           // 命令类型
+        outputBuf[5] = data[0];      // 功能码
+        outputBuf[6] = FRAME_END;      // 帧尾
+        outputBuf[7] = bcc_check(outputBuf, 6); // 校验码
+        transferSize = 8;              // 帧总长度
+    }
+}
+
+
 /****************************************************************************************************
  * Function Name: SendData_Buzzer
  * Function: 发送蜂鸣器命令
@@ -113,6 +145,17 @@ void SendData_ToMainboard_Data(uint8_t cmd,uint8_t *pdata,uint8_t datalen)
 {
     fillFrame(cmd, HAS_DATA, pdata, datalen);
     sendUartData(outputBuf, (7+datalen));
+}
+/****************************************************************************************************
+ * Function Name: copy_cmd_data_from_mainboard
+ * Function: 发送设置温度数据
+ * Input Ref: tdata - 温度数据
+ * Return Ref: 无
+ ****************************************************************************************************/
+void SendData_CopyCmd_Data(uint8_t cmd,uint8_t *pdata,uint8_t datalen) 
+{
+    fillFrame_copy(cmd, HAS_DATA, pdata, datalen);
+    sendUartData(outputBuf, (8+datalen));
 }
 
 /****************************************************************************************************
