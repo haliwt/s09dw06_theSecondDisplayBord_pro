@@ -7,7 +7,7 @@
 
 
 #include "usart.h"
-
+#include "dma.h"
 
 
 #include "bsp_smg.h"
@@ -23,9 +23,12 @@
 #include "bsp_wifi.h"
 #include "bsp_power.h"
 
+
 #include "bsp_key_app.h"
 #include "bsp_message.h"
 #include "bsp_freertos.h"
+
+
 
 
 #include "FreeRTOS.h"
@@ -89,7 +92,8 @@ typedef struct _pro_t{
    uint8_t receive_copy_cmd;
    uint8_t g_manual_shutoff_dry_flag;
    uint8_t look_over_timer_state;
-   uint8_t  input_numbers_flag;
+   uint8_t input_numbers_flag;
+   uint8_t DMA_txComplete;
   
 
 

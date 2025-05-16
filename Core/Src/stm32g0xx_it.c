@@ -62,12 +62,27 @@
 extern TIM_HandleTypeDef htim17;
 extern UART_HandleTypeDef huart1;
 /* USER CODE BEGIN EV */
+extern DMA_HandleTypeDef hdma_usart1_tx;
 
 /* USER CODE END EV */
 
 /******************************************************************************/
 /*           Cortex-M0+ Processor Interruption and Exception Handlers          */
 /******************************************************************************/
+/**
+  * @brief This function handles DMA1 channel 1 interrupt.
+  */
+void DMA1_Channel1_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA1_Channel1_IRQn 0 */
+
+  /* USER CODE END DMA1_Channel1_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_usart1_tx);
+  /* USER CODE BEGIN DMA1_Channel1_IRQn 1 */
+
+  /* USER CODE END DMA1_Channel1_IRQn 1 */
+}
+
 /**
   * @brief This function handles EXTI line 0 and line 1 interrupts.
   */

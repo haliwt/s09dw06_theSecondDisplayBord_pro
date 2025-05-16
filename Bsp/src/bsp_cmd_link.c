@@ -7,7 +7,7 @@
 #define NO_DATA             0x00
 #define HAS_DATA            0x0F
 
-
+#define USART1_INTERRUPT        0
 
 volatile uint8_t transOngoingFlag; // UART传输标志
 uint8_t outputBuf[MAX_BUFFER_BUF];
@@ -21,12 +21,20 @@ volatile uint8_t transferSize;
  * Input Ref: data - 数据指针, size - 数据大小
  * Return Ref: 无
  ****************************************************************************************************/
-static void sendUartData(uint8_t *data, uint8_t size) {
-    if (size) {
-        while (transOngoingFlag); // 等待上一次传输完成
-        transOngoingFlag = 1;
-        HAL_UART_Transmit_IT(&huart1, data, size);
-    }
+static void sendUartData(uint8_t *data, uint8_t size) 
+{
+
+    #if USART1_INTERRUPT
+		if (size) {
+			while (transOngoingFlag); // 等待上一次传输完成
+			transOngoingFlag = 1;
+			HAL_UART_Transmit_IT(&huart1, data, size);
+		}
+	#else
+
+	    HAL_UART_Transmit_DMA(&huart1, data, size);
+	
+   #endif 
 }
 
 /****************************************************************************************************
@@ -178,6 +186,7 @@ void SendData_PowerOnOff(uint8_t index) {
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
     if (huart->Instance == USART1) {
         transOngoingFlag = 0; // 清除传输标志
+       gpro_t.DMA_txComplete  = 1;
     }
 }
 
