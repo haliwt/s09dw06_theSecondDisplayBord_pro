@@ -50,7 +50,7 @@ void SetDataTemperatureValue(void)
  **********************************************************************************/
 void set_temperature_value(int8_t delta) 
 {
-    int8_t new_temp;
+    uint8_t new_temp;
 	static uint8_t temperature_init_value;
 
 	if(temperature_init_value == 0 && gpro_t.set_temp_value_success==0){
@@ -96,6 +96,7 @@ void set_temperature_value(int8_t delta)
 void adjust_timer_minutes(int8_t delta_min) 
 {
     int8_t total_hour = run_t.temporary_timer_dispTime_hours ;
+	uint8_t copy_total_hour;
     total_hour += delta_min;
 
    if(total_hour > 24){
@@ -116,7 +117,8 @@ void adjust_timer_minutes(int8_t delta_min)
     run_t.minutes_one_unit_bit    = 0;
 	gpro_t.input_numbers_flag++;
 
-	SendData_ToMainboard_Data(0x4C,&total_hour,0x01);
+	copy_total_hour=(uint8_t)total_hour;
+	SendData_ToMainboard_Data(0x4C,&copy_total_hour,0x01);
 	osDelay(5);
 
     // TM1639_Write_4Bit_Time(run_t.hours_two_decade_bit, run_t.hours_two_unit_bit,
@@ -325,7 +327,92 @@ void key_dec_fun(void)
 	*Retrurn Parameter :NO
 	*
 *****************************************************************/
+uint8_t mode_key_handler(void)
+{
 
+   
+	if(MODEL_KEY_VALUE() == KEY_DOWN && gpro_t.mode_Key_long_counter < 200){
+		gpro_t.mode_Key_long_counter++;
+
+	    if(gpro_t.mode_Key_long_counter > 100 ){
+           
+              
+		
+		  gpro_t.mode_Key_long_counter=220;
+		   if(gpro_t.DMA_txComplete ==1){
+
+		   gpro_t.DMA_txComplete=0;
+		   SendData_Buzzer();
+		 
+		   }
+		  // mode_key_long_fun();
+		   return 0x81;
+
+
+		}
+
+
+
+	}
+	
+    if(MODEL_KEY_VALUE() == KEY_UP  &&  key_t.key_mode_flag==1 && gpro_t.mode_Key_long_counter != 220){
+
+           key_t.key_mode_flag++;
+		   gpro_t.mode_Key_long_counter=0;
+
+		   SendData_Buzzer();
+		   osDelay(5);
+		  // mode_key_short_fun();
+
+           return 0x05;
+        	
+
+	}
+	else if(MODEL_KEY_VALUE() == KEY_UP  && gpro_t.mode_Key_long_counter ==220){
+	      gpro_t.mode_Key_long_counter=0;
+
+	}
+
+	return 0;
+
+}
+
+void mode_key_parse(uint8_t keyvalue)
+{
+
+
+    // 1. 系统状态检查
+    if (run_t.gPower_On != power_on) {
+        //gpro_t.mode_Key_long_counter = 0;
+        return;
+    }
+
+   switch(keyvalue){
+
+    case 0x81:
+   	
+        
+	     gpro_t.mode_Key_long_counter=0;
+		
+   	  
+        mode_key_long_fun();
+    break;
+
+	case 0x01:
+	     gpro_t.mode_Key_long_counter=0;
+		 SendData_Buzzer();
+		 osDelay(5);
+		 gpro_t.mode_key_shot_flag = 1;
+         //mode_key_short_fun();
+	   	
+
+	 break;
+
+   	}
+  
+}
+
+#if 0
 // 按键参数配置（可全局调整）
 #define KEY_LONG_PRESS_THRESHOLD   30      // 300ms长按阈值
 #define DEBOUNCE_TIME_MS          5       // 消抖时间
@@ -346,9 +433,11 @@ void mode_key_handler(void)
 
     // 2. 硬件消抖处理（更稳定的状态检测）
     uint8_t current_state = MODEL_KEY_VALUE();
+
+	
 	
     // 3. 按键状态处理（精简逻辑）
-    if (current_state == KEY_UP && key_t.key_mode_flag==1) {
+    if (current_state == KEY_DOWN && key_t.key_mode_flag==1) {
         // 按下瞬间立即触发短按
             key_t.key_mode_flag++;
 		    gpro_t.mode_key_shot_flag = 1;
@@ -378,7 +467,7 @@ void mode_key_handler(void)
     }
 }
 
-
+#endif 
 /*
 *********************************************************************************************************
 *	函 数 名: void process_keys(void) 
@@ -398,8 +487,9 @@ void process_keys(void)
 			osDelay(5);
         }
     }
-
-	mode_key_handler() ;
+//    else{
+//	   mode_key_handler() ;
+//    }
 
     // 定义所有按键处理器
     KeyHandler handlers[] = {

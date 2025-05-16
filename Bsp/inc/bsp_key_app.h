@@ -30,5 +30,10 @@ void process_keys(void) ;
 
 void SetDataTemperatureValue(void);
 
+uint8_t mode_key_handler(void);
+
+void mode_key_parse(uint8_t keyvalue);
+
+
 
 #endif /* BSP_INC_BSP_KEY_APP_H_ */

@@ -73,6 +73,8 @@ uint8_t ucKeyCode;
 uint8_t uckey_number;
 uint8_t key_power_flag,decoder_flag ;
 uint8_t check_code;
+uint8_t keyvalue;
+
 /**********************************************************************************************************
 *	凄1�7 敄1�7 各1�7: vTaskTaskUserIF
 *	功能说明: 接口消息处理〄1�7
@@ -157,29 +159,31 @@ static void vTaskRunPro(void *pvParameters)
 	//const TickType_t xMaxBlockTime = pdMS_TO_TICKS(10); /* 设置最大等待时间为30ms */
 	//uint32_t ulValue;
 	static uint8_t power_on_theFirst_times;
-    
+ 
 	
     while(1)
     {
 
     //mode_key_handler() ;
+    keyvalue = mode_key_handler();
+	mode_key_parse(keyvalue);
 	process_keys() ;
 
 	if(run_t.gPower_On == power_on){
-
-     if(key_t.key_wifi_flag==80){
-         key_t.key_wifi_flag =0;
-	
-        SendData_Set_Command(wifi_cmd,0x01);
-        osDelay(5);
-       }
+    #if 1
+//     if(key_t.key_wifi_flag==80){
+//         key_t.key_wifi_flag =0;
+//	
+//        SendData_Set_Command(wifi_cmd,0x01);
+//        osDelay(5);
+//       }
 	   if(gpro_t.mode_key_shot_flag ==1){
 	   	    gpro_t.mode_key_shot_flag++;
            // SendData_Buzzer();
             //osDelay(DEBOUNCE_DELAY_MS);
             mode_key_short_fun();
 	   	}
-    
+     #endif 
 	   power_on_run_handler();
      
        Display_TimeColon_Blink_Fun();
@@ -207,7 +211,7 @@ static void vTaskRunPro(void *pvParameters)
    
       send_cmd_ack_hanlder();
 
-	  vTaskDelay(20);
+	  vTaskDelay(10);
      
 
        } //wihile(1) ---end
@@ -459,7 +463,7 @@ void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
             
      //  ENABLE_INT();
    break;
-
+ 
    case MODEL_KEY_Pin:
       #if 0
       if(WIFI_KEY_VALUE() == KEY_DOWN){
@@ -473,7 +477,9 @@ void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
 
 
       }
-        #endif 
+     #endif 
+
+	 
        if(MODEL_KEY_VALUE() == KEY_DOWN){
         if(run_t.gPower_On == power_on){
         xTaskNotifyFromISR(xHandleTaskStart,  /* 目标任务 */
@@ -488,10 +494,10 @@ void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
        }
     
       }
-   
+      
    break;
 
-
+ 
    case DEC_KEY_Pin:
       // DISABLE_INT();
        if(DEC_KEY_VALUE() == KEY_DOWN){
