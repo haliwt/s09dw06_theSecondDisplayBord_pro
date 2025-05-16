@@ -272,13 +272,7 @@ void disp_smg_blink_set_tempeature_value(void)
              }
 	     }
 
-//     if(send_data < 3 && send_data > 0){
-//	 	send_data ++;
-//
-//	   SendData_ToMainboard_Data(0x2A,gpro_t.set_up_temperature_value,0x01); //WT.EDIT 2025.05.06
-//	   osDelay(5);
-//
-//	 }
+
 }
 
 

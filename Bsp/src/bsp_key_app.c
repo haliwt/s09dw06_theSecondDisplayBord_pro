@@ -353,7 +353,7 @@ void mode_key_handler(void)
             key_t.key_mode_flag++;
 		    gpro_t.mode_key_shot_flag = 1;
             SendData_Buzzer();
-			
+			osDelay(5);
            // mode_key_short_fun();
             gpro_t.mode_Key_long_counter=0;
     }
@@ -364,6 +364,7 @@ void mode_key_handler(void)
 				key_t.key_mode_flag++;
 				gpro_t.mode_Key_long_counter=80;
                 SendData_Buzzer();
+				osDelay(5);
                 mode_key_long_fun();
                 long_press_flag = true;
             }
