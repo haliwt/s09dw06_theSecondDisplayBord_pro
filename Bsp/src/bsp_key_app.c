@@ -339,11 +339,12 @@ uint8_t mode_key_handler(void)
               
 		
 		  gpro_t.mode_Key_long_counter=220;
+		  key_t.key_mode_flag++;
 		   if(gpro_t.DMA_txComplete ==1){
 
 		   gpro_t.DMA_txComplete=0;
 		   SendData_Buzzer();
-		 
+		   
 		   }
 		  // mode_key_long_fun();
 		   return 0x81;
@@ -359,7 +360,7 @@ uint8_t mode_key_handler(void)
 
            key_t.key_mode_flag++;
 		   gpro_t.mode_Key_long_counter=0;
-
+          // gpro_t.mode_key_shot_flag = 1;
 		   SendData_Buzzer();
 		   osDelay(5);
 		  // mode_key_short_fun();
@@ -390,12 +391,12 @@ void mode_key_parse(uint8_t keyvalue)
    switch(keyvalue){
 
     case 0x81:
-   	
+   	     mode_key_long_fun();
         
 	     gpro_t.mode_Key_long_counter=0;
 		
    	  
-        mode_key_long_fun();
+       
     break;
 
 	case 0x01:
