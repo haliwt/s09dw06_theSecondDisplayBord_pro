@@ -57,13 +57,13 @@ static void DisplayPanel_DHT11_Value(void)
 
 /*******************************************************
 	*
-	*Function Name: static void RunLocal_Dht11_Data_Process(void)
+	*Function Name: static void disp_dht11_value(void)
 	*Function : display pannel display conetent
 	*
 	*
 	*
 *******************************************************/
-void RunLocal_Dht11_Data_Process(void)
+void disp_dht11_value(void)
 {
 
   if(run_t.gTimer_display_dht11 > 9 && (gpro_t.set_timer_timing_doing_value==0||gpro_t.set_timer_timing_doing_value==3)){
@@ -84,7 +84,7 @@ void Led_Panel_OnOff(void)
 }
 /*******************************************************
 	*
-	*Function Name: static void RunLocal_Dht11_Data_Process(void)
+	*Function Name: static void disp_dht11_value(void)
 	*Function : display pannel display conetent
 	*
 	*

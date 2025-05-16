@@ -165,29 +165,16 @@ static void vTaskRunPro(void *pvParameters)
     {
 
     //mode_key_handler() ;
-    keyvalue = mode_key_handler();
-	mode_key_parse(keyvalue);
+    mode_key_handler();
+	
 	process_keys() ;
-
 	if(run_t.gPower_On == power_on){
-    #if 1
-//     if(key_t.key_wifi_flag==80){
-//         key_t.key_wifi_flag =0;
-//	
-//        SendData_Set_Command(wifi_cmd,0x01);
-//        osDelay(5);
-//       }
-	   if(gpro_t.mode_key_shot_flag ==1){
-	   	    gpro_t.mode_key_shot_flag++;
-           // SendData_Buzzer();
-            //osDelay(DEBOUNCE_DELAY_MS);
-            mode_key_short_fun();
-	   	}
-     #endif 
-	   power_on_run_handler();
+		mode_key_parse();
+
+	    power_on_run_handler();
      
        Display_TimeColon_Blink_Fun();
-	   RunLocal_Dht11_Data_Process();
+	   disp_dht11_value();
        set_timer_fun_led_blink();
        wifi_connect_state_fun();
 	  // compare_temp_value();
@@ -202,13 +189,12 @@ static void vTaskRunPro(void *pvParameters)
        works_run_two_hours_handler();
 
       }
-      else if(run_t.gPower_On == power_off){
+	  else{
 
-          power_off_run_handler();
+	    power_off_run_handler();
 
-       }
+	  }
 
-   
       send_cmd_ack_hanlder();
 
 	  vTaskDelay(10);

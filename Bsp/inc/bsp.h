@@ -91,7 +91,7 @@ typedef struct _pro_t{
    uint8_t send_ack_cmd;
    uint8_t receive_copy_cmd;
    uint8_t g_manual_shutoff_dry_flag;
-   uint8_t look_over_timer_state;
+  
    uint8_t input_numbers_flag;
    uint8_t DMA_txComplete;
   
@@ -108,6 +108,7 @@ typedef struct _pro_t{
    uint8_t gTimer_again_send_power_on_off;
    uint8_t interval_works_ten_minutes_flag;
    uint8_t gTimer_wifi_led_blink ;
+   uint8_t gTimer_disp_moke_switch;
    uint8_t gTimer_mode_long_key_counter;
    uint16_t gTimer_total_works_two_hours ;
    uint16_t gTimer_4bitsmg_blink_times;

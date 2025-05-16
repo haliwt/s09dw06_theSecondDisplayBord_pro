@@ -107,8 +107,21 @@ void power_on_run_handler(void)
 
       case SPECIAL_DISP:
 
+              if(gpro_t.mode_key_shot_flag ==1){
 
-              if(gpro_t.set_timer_timing_doing_value == 1 && run_t.ptc_warning ==0 && run_t.fan_warning ==0){
+                  if(gpro_t.gTimer_disp_moke_switch <  3){
+				  	
+			          mode_key_short_fun()
+
+                  }
+				  else{
+				     gpro_t.mode_key_shot_flag++;
+
+
+				  }
+
+			  }
+              else if(gpro_t.set_timer_timing_doing_value == 1 && run_t.ptc_warning ==0 && run_t.fan_warning ==0){
 
                    Set_TimerTiming_Number_Value();
                    
@@ -131,19 +144,28 @@ void power_on_run_handler(void)
 					case 1:
 
 						 
-               			// RunLocal_Dht11_Data_Process();
+               			// disp_dht11_value();
                        
 				        step_state=2;
 	                    
 				   break;
                     
                     case 2: //display 1:   timing times  2: timer times.
-                        if(gpro_t.set_timer_timing_doing_value==0 || gpro_t.set_timer_timing_doing_value==3){ //WT.EDIT 2025.05.07
+
+					    if(gpro_t.mode_key_shot_flag == 1){
+                              if(gpro_t.gTimer_disp_moke_switch > 2){
+							  	gpro_t.gTimer_disp_moke_switch=0;
+								gpro_t.mode_key_shot_flag++;
+                                mode_key_short_fun();
+
+                              }
+					    }
+                        else if(gpro_t.set_timer_timing_doing_value==0 || gpro_t.set_timer_timing_doing_value==3){ //WT.EDIT 2025.05.07
                         if(run_t.ptc_warning ==0 && run_t.fan_warning ==0){ //read main board ptc_warning of ref.
-                            if(gpro_t.look_over_timer_state == 0){
+                            
 							   Display_SmgTiming_Value();
 
-                            }
+                            
 
                          }
                         else{
@@ -199,18 +221,18 @@ void mode_key_short_fun(void)
 		    run_t.timer_dispTime_minutes=0;
 
 		    Display_Timing(run_t.timer_dispTime_hours,run_t.timer_dispTime_minutes);
-			osDelay(1000);
+			
 
-			gpro_t.look_over_timer_state=0;
+		
 
-		}
-		else{
+	}
+   else{
 
-             Display_Timing(run_t.works_dispTime_hours,run_t.works_dispTime_minutes);
-			 osDelay(1000);
-			 gpro_t.look_over_timer_state=0;
+        Display_Timing(run_t.works_dispTime_hours,run_t.works_dispTime_minutes);
+			
+			 
 
-		}
+	}
 
 }
 /******************************************************************************

@@ -30,9 +30,9 @@ void process_keys(void) ;
 
 void SetDataTemperatureValue(void);
 
-uint8_t mode_key_handler(void);
+void mode_key_handler(void);
 
-void mode_key_parse(uint8_t keyvalue);
+void mode_key_parse(void);
 
 
 

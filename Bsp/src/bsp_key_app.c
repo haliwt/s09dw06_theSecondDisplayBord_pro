@@ -327,7 +327,7 @@ void key_dec_fun(void)
 	*Retrurn Parameter :NO
 	*
 *****************************************************************/
-uint8_t mode_key_handler(void)
+void mode_key_handler(void)
 {
 
    
@@ -339,6 +339,7 @@ uint8_t mode_key_handler(void)
               
 		
 		  gpro_t.mode_Key_long_counter=220;
+		  gpro_t.mode_key_shot_flag = 0x81;
 		  key_t.key_mode_flag++;
 		   if(gpro_t.DMA_txComplete ==1){
 
@@ -347,7 +348,7 @@ uint8_t mode_key_handler(void)
 		   
 		   }
 		  // mode_key_long_fun();
-		   return 0x81;
+		   //return 0x81;
 
 
 		}
@@ -360,12 +361,14 @@ uint8_t mode_key_handler(void)
 
            key_t.key_mode_flag++;
 		   gpro_t.mode_Key_long_counter=0;
-          // gpro_t.mode_key_shot_flag = 1;
+           gpro_t.mode_key_shot_flag = 1;
+		   gpro_t.gTimer_disp_moke_switch=0;
 		   SendData_Buzzer();
 		   osDelay(5);
-		  // mode_key_short_fun();
+		   
+		 //  mode_key_short_fun();
 
-           return 0x05;
+          // return 0x05;
         	
 
 	}
@@ -374,42 +377,30 @@ uint8_t mode_key_handler(void)
 
 	}
 
-	return 0;
+	//return 0;
 
 }
 
-void mode_key_parse(uint8_t keyvalue)
+void mode_key_parse(void)
 {
 
 
     // 1. 系统状态检查
-    if (run_t.gPower_On != power_on) {
-        //gpro_t.mode_Key_long_counter = 0;
-        return;
-    }
+//    if (run_t.gPower_On != power_on) {
+//        //gpro_t.mode_Key_long_counter = 0;
+//        return;
+//    }
 
-   switch(keyvalue){
+   if(gpro_t.mode_key_shot_flag==0x81){
 
-    case 0x81:
+    
    	     mode_key_long_fun();
         
 	     gpro_t.mode_Key_long_counter=0;
-		
-   	  
-       
-    break;
+		 gpro_t.mode_key_shot_flag=0xff;
+   
 
-	case 0x01:
-	     gpro_t.mode_Key_long_counter=0;
-		 SendData_Buzzer();
-		 osDelay(5);
-		 gpro_t.mode_key_shot_flag = 1;
-         //mode_key_short_fun();
-	   	
-
-	 break;
-
-   	}
+	}
   
 }
 

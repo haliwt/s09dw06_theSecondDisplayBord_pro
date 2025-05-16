@@ -45,7 +45,7 @@ void Display_SmgTiming_Value(void);
 
 void Led_Panel_OnOff(void);
 
-void RunLocal_Dht11_Data_Process(void);
+void disp_dht11_value(void);
 
 
 
