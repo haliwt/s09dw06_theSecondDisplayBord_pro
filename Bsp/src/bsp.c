@@ -111,7 +111,7 @@ void power_on_run_handler(void)
 
                   if(gpro_t.gTimer_disp_moke_switch <  3){
 				  	
-			          mode_key_short_fun()
+			          mode_key_short_fun();
 
                   }
 				  else{

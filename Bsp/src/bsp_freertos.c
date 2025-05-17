@@ -169,7 +169,7 @@ static void vTaskRunPro(void *pvParameters)
 	
 	process_keys() ;
 	if(run_t.gPower_On == power_on){
-		mode_key_parse();
+		wifi_mode_key_handler();
 
 	    power_on_run_handler();
      

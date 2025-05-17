@@ -688,17 +688,23 @@ static void copy_cmd_data_from_mainboard(uint8_t *pdata )
     break;
 
     case ack_ptc:
-
+    if(pdata[4]==0x00){
     if(pdata[5]==1){
 
-        gpro_t.receive_copy_cmd = 1;
+         gpro_t.receive_copy_cmd = 1;
+		 run_t.gDry =1 ;//&& run_t.gPlasma ==1  && run_t.gUltransonic==1
+         gpro_t.g_manual_shutoff_dry_flag = 0;
+		 LED_DRY_ON();
     }
     else{
       gpro_t.receive_copy_cmd = 2;
+	  gpro_t.g_manual_shutoff_dry_flag = 0;
+      run_t.gDry =0;
+	  LED_DRY_OFF();
 
     }
 
-
+    }
 
     break;
 

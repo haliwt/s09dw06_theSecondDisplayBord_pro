@@ -340,7 +340,7 @@ void mode_key_handler(void)
 		
 		  gpro_t.mode_Key_long_counter=220;
 		  gpro_t.mode_key_shot_flag = 0x81;
-		  key_t.key_mode_flag++;
+		  key_t.key_mode_flag=8;
 		   if(gpro_t.DMA_txComplete ==1){
 
 		   gpro_t.DMA_txComplete=0;
@@ -381,7 +381,7 @@ void mode_key_handler(void)
 
 }
 
-void mode_key_parse(void)
+void wifi_mode_key_handler(void)
 {
 
 
@@ -391,9 +391,25 @@ void mode_key_parse(void)
 //        return;
 //    }
 
+    if(key_t.key_wifi_flag==80){
+
+	    run_t.wifi_led_fast_blink=1;
+        run_t.wifi_connect_state_flag = wifi_connect_null;
+        run_t.gTimer_wifi_connect_counter =0; //120s counte start
+        SendData_Set_Command(wifi_cmd,0x01);
+        osDelay(5);
+        key_t.key_wifi_flag =0;
+	
+
+       }
+
    if(gpro_t.mode_key_shot_flag==0x81){
 
-    
+//        if(gpro_t.DMA_txComplete ==1){
+//			gpro_t.DMA_txComplete=0;
+//		  SendData_Set_Command(wifi_cmd,0x01);
+//         
+//        }
    	     mode_key_long_fun();
         
 	     gpro_t.mode_Key_long_counter=0;

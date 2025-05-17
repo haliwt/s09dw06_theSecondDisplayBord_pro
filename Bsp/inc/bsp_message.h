@@ -30,9 +30,9 @@ typedef enum ack_sig{
 
   ack_null,
   ack_power,
-  ack_ptc,
-  ack_plasma,
-  ack_mouse,
+  ack_ptc=2,
+  ack_plasma=3,
+  ack_mouse=4,
   ack_wifi=0x05,
  // ack_buzzer,
   ack_ai=0x07,
