@@ -128,14 +128,16 @@ static void vTaskDecoderPro(void *pvParameters)
 			if((ulValue & DECODER_BIT_9) != 0){
 
 			   
-				gl_tMsg.disp_rx_cmd_done_flag = 0;
+				g_msg.disp_rx_cmd_done_flag =0;//gl_tMsg.disp_rx_cmd_done_flag = 0;
 
-				check_code =  bcc_check(gl_tMsg.usData,gl_tMsg.ulid);
+				//check_code =  bcc_check(gl_tMsg.usData,gl_tMsg.ulid);
+				check_code =  bcc_check(g_msg.usData,g_msg.ulid);
 
-				if(check_code == gl_tMsg.bcc_check_code ){
+				if(check_code == g_msg.bcc_check_code ){
 
-				receive_data_from_mainboard(gl_tMsg.usData);
+				receive_data_from_mainboard(g_msg.usData);
 				}
+				memset(g_msg.usData,0,MAX_FRAME_SIZE);
 			    
 			}
 
@@ -343,6 +345,7 @@ void AppTaskCreate (void)
 	*Return Ref:NO
 	*
 *******************************************************************************/
+#if 0
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
      static uint8_t state,rx_end_flag ;
@@ -420,7 +423,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     
    }
 }
-
+#endif 
 void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
 {
 
@@ -573,7 +576,22 @@ void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
 
 
 
+void freertos_usart1_handler(void)
+{
 
+    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+
+	 xTaskNotifyFromISR(xHandleTaskDecoderPro,  /* 目标任务 */
+                    DECODER_BIT_9,     /* 设置目标任务事件标志位bit0  */
+                    eSetBits,  /* 将目标任务的事件标志位与BIT_0进行或操作， 将结果赋值给事件标志位 */
+                    &xHigherPriorityTaskWoken);
+
+       /* 如果xHigherPriorityTaskWoken = pdTRUE，那么退出中断后切到当前最高优先级任务执行 */
+        portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+
+
+
+}
 
 
 

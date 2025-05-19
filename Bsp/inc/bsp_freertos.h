@@ -6,6 +6,7 @@
 
 void freeRTOS_Handler(void);
 
+void freertos_usart1_handler(void);
 
 
 

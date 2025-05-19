@@ -99,8 +99,14 @@ int main(void)
   /* USER CODE BEGIN 2 */
    bsp_init();
    HAL_TIM_Base_Start_IT(&htim17);
-   UART_Start_Receive_IT(&huart1,inputBuf,1);
+  // UART_Start_Receive_IT(&huart1,inputBuf,1);
   // __HAL_UART_ENABLE_IT(&huart1,UART_IT_ERR);
+
+    // 5. 启用空闲中断
+    __HAL_UART_ENABLE_IT(&huart1, UART_IT_IDLE);
+    
+    // 6. 启动第一次DMA接收
+    HAL_UART_Receive_DMA(&huart1, dmaRxBuffer, RX_BUFFER_SIZE);
    
 
    freeRTOS_Handler();

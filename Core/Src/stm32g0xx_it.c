@@ -63,6 +63,8 @@ extern TIM_HandleTypeDef htim17;
 extern UART_HandleTypeDef huart1;
 /* USER CODE BEGIN EV */
 extern DMA_HandleTypeDef hdma_usart1_tx;
+extern DMA_HandleTypeDef hdma_usart1_rx;
+
 
 /* USER CODE END EV */
 
@@ -70,18 +72,20 @@ extern DMA_HandleTypeDef hdma_usart1_tx;
 /*           Cortex-M0+ Processor Interruption and Exception Handlers          */
 /******************************************************************************/
 /**
-  * @brief This function handles DMA1 channel 1 interrupt.
+  * @brief This function handles DMA1 channel 2 and channel 3 interrupts.
   */
-void DMA1_Channel1_IRQHandler(void)
+void DMA1_Channel2_3_IRQHandler(void)
 {
-  /* USER CODE BEGIN DMA1_Channel1_IRQn 0 */
+  /* USER CODE BEGIN DMA1_Channel2_3_IRQn 0 */
 
-  /* USER CODE END DMA1_Channel1_IRQn 0 */
+  /* USER CODE END DMA1_Channel2_3_IRQn 0 */
   HAL_DMA_IRQHandler(&hdma_usart1_tx);
-  /* USER CODE BEGIN DMA1_Channel1_IRQn 1 */
+  HAL_DMA_IRQHandler(&hdma_usart1_rx);
+  /* USER CODE BEGIN DMA1_Channel2_3_IRQn 1 */
 
-  /* USER CODE END DMA1_Channel1_IRQn 1 */
+  /* USER CODE END DMA1_Channel2_3_IRQn 1 */
 }
+
 
 /**
   * @brief This function handles EXTI line 0 and line 1 interrupts.
@@ -213,7 +217,27 @@ void USART1_IRQHandler(void)
   /* USER CODE END USART1_IRQn 0 */
   HAL_UART_IRQHandler(&huart1);
   /* USER CODE BEGIN USART1_IRQn 1 */
+	// 处理空闲中断
+    if(__HAL_UART_GET_FLAG(&huart1, UART_FLAG_IDLE) != RESET)
+    {
+        __HAL_UART_CLEAR_IDLEFLAG(&huart1);
 
+		// 停止DMA传输以便安全读取数据
+        HAL_UART_AbortReceive(&huart1);
+        
+        // 计算接收到的数据长度
+         g_msg.receivedLength = RX_BUFFER_SIZE - __HAL_DMA_GET_COUNTER(huart1.hdmarx);
+         
+        // 处理接收到的数据
+        //ProcessReceivedData(dmaRxBuffer, g_msg.receivedLength);
+		 HandleReceivedFrame(dmaRxBuffer, g_msg.receivedLength);
+
+       // memset(dmaRxBuffer, 0, RX_BUFFER_SIZE);
+        // 重新启动DMA接收
+        HAL_UART_Receive_DMA(&huart1, dmaRxBuffer, RX_BUFFER_SIZE);
+    }
+    
+    HAL_UART_IRQHandler(&huart1);
   /* USER CODE END USART1_IRQn 1 */
 }
 
