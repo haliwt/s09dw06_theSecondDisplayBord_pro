@@ -185,8 +185,11 @@ void SendData_PowerOnOff(uint8_t index) {
  ****************************************************************************************************/
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
     if (huart->Instance == USART1) {
+	 #if USART1_INTERRUPT
         transOngoingFlag = 0; // 清除传输标志
-       gpro_t.DMA_txComplete  = 1;
+     #else
+        gpro_t.DMA_txComplete  = 1;
+	 #endif 
     }
 }
 
