@@ -133,11 +133,11 @@ static void vTaskDecoderPro(void *pvParameters)
 				//check_code =  bcc_check(gl_tMsg.usData,gl_tMsg.ulid);
 				check_code =  bcc_check(g_msg.usData,g_msg.ulid);
 
-				if(check_code == g_msg.bcc_check_code ){
+				//if(check_code == g_msg.bcc_check_code ){
 
 				receive_data_from_mainboard(g_msg.usData);
-				}
-				memset(g_msg.usData,0,MAX_FRAME_SIZE);
+				//}
+				//memset(g_msg.usData,0,MAX_FRAME_SIZE);
 			    
 			}
 

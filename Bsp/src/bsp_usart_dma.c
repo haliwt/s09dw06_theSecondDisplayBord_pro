@@ -83,7 +83,7 @@ void HandleReceivedFrame(uint8_t *buffer, uint8_t length)
     // 这里可以实现你的协议解析逻辑
     // 示例：检查帧头 0x5A 和帧尾 0xFE
 
-    //if (length >= 2 && buffer[0] == 0x5A && buffer[length - 1] == 0xFE)
+    if (length >= 2 && buffer[0] == 0x5A && buffer[length - 2] == 0xFE)
     {
         // 成功接收到一帧数据
         g_msg.rx_data_counter = length;
