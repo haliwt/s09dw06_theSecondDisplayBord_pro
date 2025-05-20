@@ -217,6 +217,7 @@ void USART1_IRQHandler(void)
   /* USER CODE END USART1_IRQn 0 */
   //HAL_UART_IRQHandler(&huart1);
   /* USER CODE BEGIN USART1_IRQn 1 */
+   #if 0
 	// 处理空闲中断
     if(__HAL_UART_GET_FLAG(&huart1, UART_FLAG_IDLE) != RESET)
     {
@@ -236,6 +237,7 @@ void USART1_IRQHandler(void)
         // 重新启动DMA接收
         HAL_UART_Receive_DMA(&huart1, dmaRxBuffer, RX_BUFFER_SIZE);
     }
+	#endif 
     
     HAL_UART_IRQHandler(&huart1);
   /* USER CODE END USART1_IRQn 1 */

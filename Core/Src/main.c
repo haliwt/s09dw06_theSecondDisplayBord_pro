@@ -103,10 +103,17 @@ int main(void)
   // __HAL_UART_ENABLE_IT(&huart1,UART_IT_ERR);
 
     // 5. 启用空闲中断
-    __HAL_UART_ENABLE_IT(&huart1, UART_IT_IDLE);
+   // __HAL_UART_ENABLE_IT(&huart1, UART_IT_IDLE);
     
     // 6. 启动第一次DMA接收
-    HAL_UART_Receive_DMA(&huart1, dmaRxBuffer, RX_BUFFER_SIZE);
+   // HAL_UART_Receive_DMA(&huart1, dmaRxBuffer, RX_BUFFER_SIZE);
+
+  
+   // 启动 DMA 接收（使用空闲线检测接收不定长帧）
+	  HAL_UARTEx_ReceiveToIdle_DMA(&huart1, dmaRxBuffer, RX_BUFFER_SIZE);
+   
+	   // 禁止 UART DMA 半传输中断（避免干扰）
+	// __HAL_DMA_DISABLE_IT(&hdma_usart1_rx, DMA_IT_HT);
    
 
    freeRTOS_Handler();

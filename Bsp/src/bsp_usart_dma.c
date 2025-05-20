@@ -107,4 +107,27 @@ void HandleReceivedFrame(uint8_t *buffer, uint8_t length)
     }
 }
 
+/**
+ * @brief UART DMA 接收回调函数（接收完成或空闲线中断触发）
+ */
+void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
+{
+    if (huart == &huart1) {
+        // 将接收到的数据发送到队列
+        ///BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+
+        // 发送数据到队列（注意：必须使用 FromISR 版本）
+        //xQueueSendFromISR(xUartQueue, &rx_buffer, &xHigherPriorityTaskWoken);
+
+        // 如果有高优先级任务被唤醒，请求一次上下文切换
+       // portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+
+		   g_msg.rx_data_counter = (uint8_t)Size;
+           memcpy(g_msg.usData, dmaRxBuffer, g_msg.rx_data_counter);  // 复制到全局消息结构体
+          freertos_usart1_handler();
+
+        // 重新启动 DMA 接收
+        HAL_UARTEx_ReceiveToIdle_DMA(huart, dmaRxBuffer, RX_BUFFER_SIZE);
+    }
+}
 
