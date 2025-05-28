@@ -166,7 +166,7 @@ static void vTaskRunPro(void *pvParameters)
     while(1)
     {
 
-    //mode_key_handler() ;
+
     mode_key_handler();
 	
 	process_keys() ;
@@ -179,8 +179,7 @@ static void vTaskRunPro(void *pvParameters)
 	   disp_dht11_value();
        set_timer_fun_led_blink();
        wifi_connect_state_fun();
-	  // compare_temp_value();
-	  //  SetDataTemperatureValue();
+	  
 	 
        if(power_on_theFirst_times < 10 && (gpro_t.set_timer_timing_doing_value==0 || gpro_t.set_timer_timing_doing_value==3)){
          power_on_theFirst_times ++;
@@ -212,7 +211,7 @@ static void vTaskRunPro(void *pvParameters)
 *	Function: 
 *	Input Ref: pvParameters 是在创建该任务时传递的形参
 *	Return Ref:
-*priority: 3  (数值越小优先级越低，这个跟uCOS相反)
+*	priority: 3  (数值越小优先级越低，这个跟uCOS相反)
 *
 **********************************************************************************************************/
 static void vTaskStart(void *pvParameters)
@@ -574,9 +573,15 @@ void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
 
 
 
-
-
-void freertos_usart1_handler(void)
+/**********************************************************************
+	*
+	*Function Name:void vTaskDecoder_USART1_handler(void)
+	*Function:
+	*Input Ref:
+	*Return Ref:
+	*
+***********************************************************************/
+void vTaskDecoder_USART1_handler(void)
 {
 
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
@@ -585,8 +590,7 @@ void freertos_usart1_handler(void)
                     DECODER_BIT_9,     /* 设置目标任务事件标志位bit0  */
                     eSetBits,  /* 将目标任务的事件标志位与BIT_0进行或操作， 将结果赋值给事件标志位 */
                     &xHigherPriorityTaskWoken);
-
-       /* 如果xHigherPriorityTaskWoken = pdTRUE，那么退出中断后切到当前最高优先级任务执行 */
+	 
         portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 
 

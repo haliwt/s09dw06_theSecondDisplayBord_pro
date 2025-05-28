@@ -41,6 +41,7 @@ void send_cmd_ack_hanlder(void)
           else if(gpro_t.receive_copy_cmd != 0 && gpro_t.gTimer_again_send_power_on_off >1){
              gpro_t.gTimer_again_send_power_on_off =0;
              SendData_PowerOnOff(1);
+		     osDelay(5);
           }
 
         
@@ -55,6 +56,7 @@ void send_cmd_ack_hanlder(void)
           else if(gpro_t.receive_copy_cmd != 0 && gpro_t.gTimer_again_send_power_on_off >1){
                gpro_t.gTimer_again_send_power_on_off =0;
                SendData_PowerOnOff(0);
+		       osDelay(5);
            }
              
       

@@ -244,8 +244,11 @@ void disp_smg_blink_set_tempeature_value(void)
 			  TM1639_Write_2bit_SetUp_TempData(run_t.set_temperature_decade_value,run_t.set_temperature_unit_value,0);
 
 		  }
-       
 
+
+		  
+       
+   
 
            if(counter_times > 1){
 			 
@@ -257,19 +260,20 @@ void disp_smg_blink_set_tempeature_value(void)
 			  run_t.gTimer_temp_delay = 70; //at once shut down ptc  funciton
 			  run_t.gTimer_display_dht11 = 90;
 		
-			  
-			//  SendData_Tx_Data(0x11,gpro_t.set_up_temperature_value);
-			  TM1639_Write_2bit_SetUp_TempData(run_t.set_temperature_decade_value,run_t.set_temperature_unit_value,0);
+			 TM1639_Write_2bit_SetUp_TempData(run_t.set_temperature_decade_value,run_t.set_temperature_unit_value,0);
              
 			  Display_DHT11_Value();
-             
-			  // SendData_ToMainboard_Data(0x2A,&gpro_t.set_up_temperature_value,0x01); //WT.EDIT 2025.05.06
-    		  // osDelay(5);
-			   compare_temp_value();
-			  // send_data =1;
+              gpro_t.g_manual_shutoff_dry_flag=0; //WT.EDIT 2025.05.28
+
+			// SendData_ToMainboard_Data(0x2A, &gpro_t.set_up_temperature_value,0x01) ; //set temperature value 
+			// osDelay(5);
+			
+			// compare_temp_value();
+			
 			  
               
              }
+		  
 	     }
 
 

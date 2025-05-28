@@ -59,8 +59,8 @@ static void DisplayPanel_DHT11_Value(void)
 	*
 	*Function Name: static void disp_dht11_value(void)
 	*Function : display pannel display conetent
-	*
-	*
+	*Input Ref:NO
+	*Return Ref:NO
 	*
 *******************************************************/
 void disp_dht11_value(void)

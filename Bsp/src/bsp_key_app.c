@@ -55,7 +55,7 @@ void set_temperature_value(int8_t delta)
 
 	if(temperature_init_value == 0 && gpro_t.set_temp_value_success==0){
         temperature_init_value++;
-        gpro_t.set_up_temperature_value = (delta > 0) ? 21 : 39;
+        gpro_t.set_up_temperature_value = (delta > 0) ? 20 : 40;
 	    new_temp = gpro_t.set_up_temperature_value;
     }
 	else{
@@ -148,22 +148,6 @@ void handle_key(KeyHandler *handler)
     }
 }
 
-
-
-
-/**********************************************************************************************************
-*	函 数 名: bsp_PutKey
-*	功能说明: 将1个键值压入按键FIFO缓冲区。可用于模拟一个按键。
-*	形    参:  _KeyCode : 按键代码
-*	返 回 值: 无
-**********************************************************************************************************/
-void sendCommandAndAck(uint8_t cmd, uint8_t value, uint8_t ackType) {
-    SendData_Set_Command(cmd, value);
-    osDelay(5);
-    gpro_t.send_ack_cmd = ackType;
-    gpro_t.gTimer_again_send_power_on_off = 0;
-}
-
 /**********************************************************************************************************
 *	函 数 名: void power_key_handler(void) 
 *	功能说明: 从按键FIFO缓冲区读取一个键值。
@@ -174,10 +158,12 @@ void power_key_handler(void)
 {
     if(run_t.gPower_On == power_off){
         SendData_PowerOnOff(1); // power on
+        osDelay(5); 
     } else {
         SendData_PowerOnOff(0); // power off
+        osDelay(5);
     }
-    osDelay(10);
+    
 }
 
 
@@ -189,20 +175,22 @@ void power_key_handler(void)
 **********************************************************************************************************/
 void plasma_key_handler(void) 
 {
-    if(gpro_t.set_timer_timing_doing_value==0 ||gpro_t.set_timer_timing_doing_value==3){
+    //if(gpro_t.set_timer_timing_doing_value==0 ||gpro_t.set_timer_timing_doing_value==3){
         if(run_t.gPlasma == 1){
             run_t.gPlasma = 0;
             SendData_Set_Command(plasma_cmd, 0x00);
+		    osDelay(5);
             LED_PLASMA_OFF();
             gpro_t.send_ack_cmd = check_ack_plasma_off;
         } else {
             run_t.gPlasma = 1;
             SendData_Set_Command(plasma_cmd, 0x01);
+			osDelay(5);
             LED_PLASMA_ON();
             gpro_t.send_ack_cmd = check_ack_plasma_on;
         }
         gpro_t.gTimer_again_send_power_on_off = 0;
-    }
+    //}
 }
 /****************************************************************
 	*
@@ -212,22 +200,23 @@ void plasma_key_handler(void)
 	*Retrurn Parameter :NO
 	*
 *****************************************************************/
-
 void dry_key_handler(void) 
 {
-    if(gpro_t.set_timer_timing_doing_value == 0 || gpro_t.set_timer_timing_doing_value == 3) {
+   // if(gpro_t.set_timer_timing_doing_value == 0 || gpro_t.set_timer_timing_doing_value == 3) {
         if(run_t.gDry == 0) {
-            sendCommandAndAck(dry_cmd, 0x01, check_ack_ptc_on);
+            SendData_Set_Command(dry_cmd, 0x01);//sendCommandAndAck(dry_cmd, 0x01, check_ack_ptc_on);
+			osDelay(5);
             run_t.gDry = 1;
             gpro_t.g_manual_shutoff_dry_flag = 0;
             LED_DRY_ON();
         } else {
-            sendCommandAndAck(dry_cmd, 0x00, check_ack_ptc_off);
+            SendData_Set_Command(dry_cmd, 0x00);//sendCommandAndAck(dry_cmd, 0x00, check_ack_ptc_off);
+			osDelay(5);
             run_t.gDry = 0;
             gpro_t.g_manual_shutoff_dry_flag = 1; // 手动关闭后不再自动开启
             LED_DRY_OFF();
         }
-    }
+   // }
 }
 /****************************************************************
 	*
@@ -237,10 +226,9 @@ void dry_key_handler(void)
 	*Retrurn Parameter :NO
 	*
 *****************************************************************/
-
 void mouse_key_handler(void) 
 {
-    if(gpro_t.set_timer_timing_doing_value == 0 || gpro_t.set_timer_timing_doing_value == 3) {
+   // if(gpro_t.set_timer_timing_doing_value == 0 || gpro_t.set_timer_timing_doing_value == 3) {
         if(run_t.gMouse == 0) {
             // 开启 Mouse 功能
             SendData_Set_Command(mouse_cmd, 0x01);
@@ -259,7 +247,7 @@ void mouse_key_handler(void)
             gpro_t.send_ack_cmd = check_ack_mouse_off;  // 假设有对应的反馈类型
             gpro_t.gTimer_again_send_power_on_off = 0;
         }
-    }
+   // }
 }
 /****************************************************************
 	*
@@ -280,8 +268,7 @@ void key_add_fun(void)
 
 	    case 3:
 		case 0:  // 设置温度增加
-           // SendData_Buzzer();
-		   // osDelay(5);
+           
             set_temperature_value(+1);
             break;
 
@@ -296,6 +283,14 @@ void key_add_fun(void)
 }
 
 
+/****************************************************************
+	*
+	*Function Name :void key_dec_fun(void)
+	*Function : 
+	*Input Parameters :NO
+	*Retrurn Parameter :NO
+	*
+*****************************************************************/
 void key_dec_fun(void)
 {
     if(run_t.ptc_warning != 0) return;
@@ -380,7 +375,14 @@ void mode_key_handler(void)
 	//return 0;
 
 }
-
+/****************************************************************
+	*
+	*Function Name :void wifi_mode_key_handler(void)
+	*Function : 
+	*Input Parameters :NO
+	*Retrurn Parameter :NO
+	*
+*****************************************************************/
 void wifi_mode_key_handler(void)
 {
 

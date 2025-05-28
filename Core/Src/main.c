@@ -6,8 +6,8 @@
   ******************************************************************************
   * @attention
   *
-  * S06 display board has wifi function. 
-  * DATA:2025.05.07
+  * S06 display board has wifi function. DATA:2025.05.07
+  *      
   * 
   * 
   * 
@@ -99,24 +99,17 @@ int main(void)
   /* USER CODE BEGIN 2 */
    bsp_init();
    HAL_TIM_Base_Start_IT(&htim17);
-  // UART_Start_Receive_IT(&huart1,inputBuf,1);
-  // __HAL_UART_ENABLE_IT(&huart1,UART_IT_ERR);
 
-    // 5. 启用空闲中断
-   // __HAL_UART_ENABLE_IT(&huart1, UART_IT_IDLE);
-    
-    // 6. 启动第一次DMA接收
-   // HAL_UART_Receive_DMA(&huart1, dmaRxBuffer, RX_BUFFER_SIZE);
-
-  
-   // 启动 DMA 接收（使用空闲线检测接收不定长帧）
-	  HAL_UARTEx_ReceiveToIdle_DMA(&huart1, dmaRxBuffer, RX_BUFFER_SIZE);
-   
-	   // 禁止 UART DMA 半传输中断（避免干扰）
-	// __HAL_DMA_DISABLE_IT(&hdma_usart1_rx, DMA_IT_HT);
-   
-
+   #if USART1_INTERRUPT
+   	 UART_Start_Receive_IT(&huart1,inputBuf,1);
+   #else
+    //__HAL_UART_ENABLE_IT(&huart1, UART_IT_IDLE);//need manual turn of and need manual need clear flag
+    HAL_UARTEx_ReceiveToIdle_DMA(&huart1, dmaRxBuffer,sizeof(dmaRxBuffer));//RX_BUFFER_SIZE);
+   #endif 
+	
    freeRTOS_Handler();
+
+   
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */
