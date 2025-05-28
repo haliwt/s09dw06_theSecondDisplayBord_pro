@@ -224,11 +224,7 @@ static void vTaskStart(void *pvParameters)
     while(1)
     {
       
-      //bsp_KeyScan();
-
-
-
-       xResult = xTaskNotifyWait(0x00000000,      
+		xResult = xTaskNotifyWait(0x00000000,      
 						           0xFFFFFFFF,      
 						          &ulValue,        /* 保存ulNotifiedValue到变量ulValue中 */
 								  portMAX_DELAY);  /* 最大允许延迟时间 */

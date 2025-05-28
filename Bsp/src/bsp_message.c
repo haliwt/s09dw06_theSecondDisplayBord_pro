@@ -243,14 +243,15 @@ void receive_data_from_mainboard(uint8_t *pdata)
             run_t.gRunCommand_label =RUN_NULL;
             //gpro_t.receive_copy_cmd = 1;
             power_on_handler();
-            //SendData_ToMainboard_Data(uint8_t cmd,uint8_t *pdata,uint8_t datalen) ;
+            SendData_Set_Command(0x11,0x01); //0x11 :send to main has the second display board exit.
+			osDelay(5);
            }
            else{ //power off
 
             run_t.gPower_On = power_off;
             run_t.gRunCommand_label =RUN_NULL;
-            //gpro_t.receive_copy_cmd = 2;
-           // power_off_handler();
+            SendData_Set_Command(0x11,0x01);
+			osDelay(5);
            
            }
           }
