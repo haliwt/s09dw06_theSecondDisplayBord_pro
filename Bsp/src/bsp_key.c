@@ -155,7 +155,15 @@ void Set_TimerTiming_Number_Value(void)
 
     if(gpro_t.set_timer_timing_doing_value==2){
     	gpro_t.set_timer_timing_doing_value++;
-		if(run_t.temporary_timer_dispTime_hours >0 ){
+		if(gpro_t.set_timer_timing_value_success  == TIMER_SUCCESS && gpro_t.key_add_dec_pressed_flag ==0){
+             run_t.hours_two_decade_bit = run_t.timer_dispTime_hours/10,
+        	 run_t.hours_two_unit_bit  = run_t.timer_dispTime_hours %10;
+        	 //run_t.minutes_one_decade_bit = run_t.timer_dispTime_minutes /10;
+        	 //run_t.minutes_one_unit_bit = run_t.timer_dispTime_minutes %10;
+        	 Display_Timing(run_t.timer_dispTime_hours,run_t.timer_dispTime_minutes,0);
+
+		}
+		else if(run_t.temporary_timer_dispTime_hours >0 && gpro_t.key_add_dec_pressed_flag ==1){
 			gpro_t.set_timer_timing_value_success  = TIMER_SUCCESS;
 			run_t.gTimer_timer_seconds_counter = 0;
 
@@ -166,7 +174,7 @@ void Set_TimerTiming_Number_Value(void)
 
 			}
 
-			Display_Timing(run_t.timer_dispTime_hours,run_t.timer_dispTime_minutes);
+			Display_Timing(run_t.timer_dispTime_hours,run_t.timer_dispTime_minutes,0);
 
 
 		}
@@ -181,25 +189,52 @@ void Set_TimerTiming_Number_Value(void)
 
     }
 }
-
+/***********************************************************************************
+	 *
+	 * Function Name:void set_timer_fun_led_blink(void)
+	 * Function:
+	 * Input Ref:NO
+	 * Return Ref:NO
+	 *
+************************************************************************************/
 void set_timer_fun_led_blink(void)
 {
    static uint8_t time_smg_blink;
  
    if(gpro_t.set_timer_timing_doing_value==1){
-   	
 
-     if(gpro_t.gTimer_4bitsmg_blink_times  > 300){// //180ms
+     if(gpro_t.key_add_dec_pressed_flag ==1 && gpro_t.gTimer_4bitsmg_blink_times  > 300){//if has a key be pressed "+" key or "-" key
+
+    	gpro_t.gTimer_4bitsmg_blink_times =0;
+        time_smg_blink = time_smg_blink ^ 0x01;
+        TM1639_Write_4Bit_Time_sync_close(run_t.hours_two_decade_bit,run_t.hours_two_unit_bit, run_t.minutes_one_decade_bit,run_t.minutes_one_unit_bit,time_smg_blink) ;
+
+   	
+     }
+     else if(gpro_t.key_add_dec_pressed_flag ==0 && gpro_t.gTimer_4bitsmg_blink_times  > 300){// //180ms
        gpro_t.gTimer_4bitsmg_blink_times =0;
 
        time_smg_blink = time_smg_blink ^ 0x01;
 
-  
-       TM1639_Write_4Bit_Time_sync_close(run_t.hours_two_decade_bit,run_t.hours_two_unit_bit, run_t.minutes_one_decade_bit,run_t.minutes_one_unit_bit,time_smg_blink) ; 
-    
+       if(gpro_t.set_timer_timing_value_success==0){
+
+      	run_t.timer_dispTime_hours=0;
+      	run_t.timer_dispTime_minutes=0;
+
+      	 TM1639_Write_4Bit_Time_sync_close(run_t.hours_two_decade_bit,run_t.hours_two_unit_bit, run_t.minutes_one_decade_bit,run_t.minutes_one_unit_bit,time_smg_blink) ;
+
+      	}
+         else{
+        	 run_t.hours_two_decade_bit = run_t.timer_dispTime_hours/10,
+        	 run_t.hours_two_unit_bit  = run_t.timer_dispTime_hours %10;
+        	 run_t.minutes_one_decade_bit = run_t.timer_dispTime_minutes /10;
+        	 run_t.minutes_one_unit_bit = run_t.timer_dispTime_minutes %10;
+        	 TM1639_Write_4Bit_Time_sync_close(run_t.hours_two_decade_bit,run_t.hours_two_unit_bit, run_t.minutes_one_decade_bit,run_t.minutes_one_unit_bit,time_smg_blink) ;
+
+         }
+     
        
-    
-   }
+    }
 
    }
   
@@ -259,16 +294,13 @@ void disp_smg_blink_set_tempeature_value(void)
 	         run_t.set_temperature_special_flag =0xff;
 			  run_t.gTimer_temp_delay = 70; //at once shut down ptc  funciton
 			  run_t.gTimer_display_dht11 = 90;
-		
-			 TM1639_Write_2bit_SetUp_TempData(run_t.set_temperature_decade_value,run_t.set_temperature_unit_value,0);
-             
+		   
+			  TM1639_Write_2bit_SetUp_TempData(run_t.set_temperature_decade_value,run_t.set_temperature_unit_value,0);
+		      
 			  Display_DHT11_Value();
               gpro_t.g_manual_shutoff_dry_flag=0; //WT.EDIT 2025.05.28
 
-			// SendData_ToMainboard_Data(0x2A, &gpro_t.set_up_temperature_value,0x01) ; //set temperature value 
-			// osDelay(5);
-			
-			// compare_temp_value();
+		
 			
 			  
               

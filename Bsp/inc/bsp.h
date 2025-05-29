@@ -101,6 +101,7 @@ typedef struct _pro_t{
 
    uint8_t g_time_disp_colon_flag;
    uint8_t smartphone_app_timer_power_on_flag;
+   uint8_t key_add_dec_pressed_flag;
    
 
 

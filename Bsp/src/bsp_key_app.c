@@ -116,8 +116,7 @@ void adjust_timer_minutes(int8_t delta_min)
 	SendData_ToMainboard_Data(0x4C,&copy_total_hour,0x01);
 	osDelay(5);
 
-    // TM1639_Write_4Bit_Time(run_t.hours_two_decade_bit, run_t.hours_two_unit_bit,
-    //                        run_t.minutes_one_decade_bit, run_t.minutes_one_unit_bit, 0);
+    
 }
 
 /****************************************************************
@@ -269,9 +268,9 @@ void key_add_fun(void)
 
         case 1:  // 设置定时增加（每次加60分钟）
             SendData_Buzzer();
-			 osDelay(5);
+			osDelay(5);
             run_t.gTimer_key_timing = 0;
-
+            gpro_t.key_add_dec_pressed_flag = 1;
             adjust_timer_minutes(1);  // 固定每次加60分钟
             break;
     }
@@ -304,7 +303,7 @@ void key_dec_fun(void)
             SendData_Buzzer();
 			 osDelay(5);
             run_t.gTimer_key_timing = 0;
-
+            gpro_t.key_add_dec_pressed_flag = 1;
             adjust_timer_minutes(-1);  // 固定每次减60分钟
         break;
     }
@@ -365,11 +364,10 @@ static void handle_mode_key_long_press(void)
     gpro_t.mode_Key_long_counter = 220;
     gpro_t.mode_key_shot_flag = 0x81;
     key_t.key_mode_flag = 8;
+
+    SendData_Buzzer();
+    osDelay(5);
     
-    if (gpro_t.DMA_txComplete == 1) {
-        gpro_t.DMA_txComplete = 0;
-        SendData_Buzzer();
-    }
 }
 
 /****************************************************************
@@ -392,7 +390,7 @@ void wifi_mode_key_handler(void)
 
     if(key_t.key_wifi_flag==200){
 
-	    run_t.wifi_led_fast_blink=1;
+
         run_t.wifi_connect_state_flag = wifi_connect_null;
         run_t.gTimer_wifi_connect_counter =0; //120s counte start
         SendData_Set_Command(wifi_cmd,0x01);
@@ -401,14 +399,9 @@ void wifi_mode_key_handler(void)
 	
 
     }
-
+   #if 1
    if(gpro_t.mode_key_shot_flag==0x81){
-
-//        if(gpro_t.DMA_txComplete ==1){
-//			gpro_t.DMA_txComplete=0;
-//		  SendData_Set_Command(wifi_cmd,0x01);
-//         
-//        }
+	     
    	     mode_key_long_fun();
         
 	     gpro_t.mode_Key_long_counter=0;
@@ -416,6 +409,7 @@ void wifi_mode_key_handler(void)
    
 
 	}
+   #endif 
   
 }
 

@@ -44,14 +44,14 @@ void Display_DHT11_Value(void)
 *Return Ref: NO
 *
 **********************************************************************/
-void Display_Timing(uint8_t hours,uint8_t minutes)
+void Display_Timing(uint8_t hours,uint8_t minutes,uint8_t disp)
 { 
     static uint8_t m,q;
 	m = hours /10 ;
 	run_t.hours_two_unit_bit =	hours%10; 
 	run_t.minutes_one_decade_bit= minutes/10 ;
 	q=  minutes%10;
-	TM1639_Write_4Bit_Time(m,run_t.hours_two_unit_bit,run_t.minutes_one_decade_bit,q,0) ; //timer is default 12 hours "12:00"
+	TM1639_Write_4Bit_Time(m,run_t.hours_two_unit_bit,run_t.minutes_one_decade_bit,q,disp) ; //timer is default 12 hours "12:00"
 
 
 }

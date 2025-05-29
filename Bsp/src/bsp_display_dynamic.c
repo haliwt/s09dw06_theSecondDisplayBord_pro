@@ -170,7 +170,7 @@ static void Display_Works_Time_Fun(void)
 	       if(works_timing_flag==1){
 	          works_timing_flag=0;
 			 
-			 Display_Timing(run_t.works_dispTime_hours,run_t.works_dispTime_minutes);
+			 Display_Timing(run_t.works_dispTime_hours,run_t.works_dispTime_minutes,0);
 		  
 	        }
 		    
@@ -363,7 +363,7 @@ void Display_SmgTiming_Value(void)
 				   run_t.timer_dispTime_minutes =59;
 				
 				   uint8_t dataToSend[3] = {run_t.timer_dispTime_hours,run_t.timer_dispTime_minutes, run_t.gTimer_timer_seconds_counter}; // 要发送的 3 个数据
-           SendData_ToMainboard_Data(0x5C, dataToSend, 3); // cmd=0x1A, 数据长度=3
+           			SendData_ToMainboard_Data(0x5C, dataToSend, 3); // cmd=0x1A, 数据长度=3
                     osDelay(5);
 		         }
 
@@ -382,7 +382,7 @@ void Display_SmgTiming_Value(void)
 			      }
 		}
 
-        Display_Timing(run_t.timer_dispTime_hours,run_t.timer_dispTime_minutes);
+        Display_Timing(run_t.timer_dispTime_hours,run_t.timer_dispTime_minutes,0);
         WorksTime_DonotDisplay_Fun();
         
 	    break;
@@ -405,7 +405,7 @@ void Display_SmgTiming_Value(void)
     	      }
            }
   
-            Display_Timing(run_t.works_dispTime_hours,run_t.works_dispTime_minutes);
+            Display_Timing(run_t.works_dispTime_hours,run_t.works_dispTime_minutes,0);
             Display_Works_Time_Fun();
             Timer_Timing_Donot_Display();
 			break;

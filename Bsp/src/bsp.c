@@ -206,6 +206,7 @@ void detected_ptc_or_fan_warning_fun(void)
 void mode_key_long_fun(void)
 {
          gpro_t.set_timer_timing_doing_value = 1;
+		 gpro_t.key_add_dec_pressed_flag =0;
 		 run_t.gTimer_key_timing = 0;
 		 run_t.gTimer_smg_blink_times =0;
 		 gpro_t.set_timer_first_smg_blink_flag=0;
@@ -220,12 +221,12 @@ void mode_key_short_fun(void)
 	run_t.timer_dispTime_hours=0;
 	run_t.timer_dispTime_minutes=0;
 
-	Display_Timing(run_t.timer_dispTime_hours,run_t.timer_dispTime_minutes);
+	Display_Timing(run_t.timer_dispTime_hours,run_t.timer_dispTime_minutes,0);
 
 	}
    else{
 
-        Display_Timing(run_t.works_dispTime_hours,run_t.works_dispTime_minutes);
+        Display_Timing(run_t.works_dispTime_hours,run_t.works_dispTime_minutes,0);
 			
 			 
 
