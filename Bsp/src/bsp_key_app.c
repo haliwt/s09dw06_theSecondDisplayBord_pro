@@ -401,7 +401,7 @@ void wifi_mode_key_handler(void)
     }
    #if 1
    if(gpro_t.mode_key_shot_flag==0x81){
-	     
+
    	     mode_key_long_fun();
         
 	     gpro_t.mode_Key_long_counter=0;
