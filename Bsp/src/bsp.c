@@ -217,13 +217,10 @@ void mode_key_short_fun(void)
 
   if(gpro_t.set_timer_timing_value_success==0){
              
-			run_t.timer_dispTime_hours=0;
-		    run_t.timer_dispTime_minutes=0;
+	run_t.timer_dispTime_hours=0;
+	run_t.timer_dispTime_minutes=0;
 
-		    Display_Timing(run_t.timer_dispTime_hours,run_t.timer_dispTime_minutes);
-			
-
-		
+	Display_Timing(run_t.timer_dispTime_hours,run_t.timer_dispTime_minutes);
 
 	}
    else{
