@@ -393,7 +393,7 @@ void wifi_mode_key_handler(void)
 //        return;
 //    }
 
-    if(key_t.key_wifi_flag==80){
+    if(key_t.key_wifi_flag==200){
 
 	    run_t.wifi_led_fast_blink=1;
         run_t.wifi_connect_state_flag = wifi_connect_null;
@@ -403,7 +403,7 @@ void wifi_mode_key_handler(void)
         key_t.key_wifi_flag =0;
 	
 
-       }
+    }
 
    if(gpro_t.mode_key_shot_flag==0x81){
 
@@ -489,17 +489,15 @@ void mode_key_handler(void)
 void process_keys(void) 
 {
     // 处理WiFi键
-    if(WIFI_KEY_VALUE() == KEY_DOWN && key_t.key_wifi_flag < 60 && run_t.gPower_On == power_on) {
+    if(WIFI_KEY_VALUE() == KEY_DOWN && key_t.key_wifi_flag < 150 && run_t.gPower_On == power_on) {
         key_t.key_wifi_flag++;
-        if(key_t.key_wifi_flag > 30) {
-            key_t.key_wifi_flag = 80;
+        if(key_t.key_wifi_flag > 130) {
+            key_t.key_wifi_flag = 200;
             SendData_Buzzer();
 			osDelay(5);
         }
     }
-//    else{
-//	   mode_key_handler() ;
-//    }
+
 
     // 定义所有按键处理器
     KeyHandler handlers[] = {

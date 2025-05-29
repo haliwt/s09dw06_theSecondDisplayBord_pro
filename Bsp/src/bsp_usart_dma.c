@@ -108,7 +108,8 @@ void HandleReceivedFrame(uint8_t *buffer, uint8_t length)
 }
 
 /**
- * @brief UART DMA 接收回调函数（接收完成或空闲线中断触发）
+ * @brief UART DMA 
+ * UART callback function接收回调函数（接收完成或空闲线中断触发）
  */
 void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
 {
@@ -118,7 +119,7 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
           vTaskDecoder_USART1_handler();
 
         // 重新启动 DMA 接收
-        HAL_UARTEx_ReceiveToIdle_DMA(huart, dmaRxBuffer, RX_BUFFER_SIZE);
+        HAL_UARTEx_ReceiveToIdle_DMA(huart, dmaRxBuffer, sizeof(dmaRxBuffer));
     }
 }
 
