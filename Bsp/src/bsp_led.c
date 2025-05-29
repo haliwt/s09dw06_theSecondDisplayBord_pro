@@ -81,18 +81,18 @@ void Panel_Led_OnOff_Function(void)
 
        LED_MOUSE_OFF();//mouse_led_onoff(0); //display fan of grass is one 
     } 
-    else if(run_t.gMouse  == 1){ // && (run_t.gDry==0 && run_t.gPlasma==0)){ //WT.DEDIT 20223.09.15
+    else if(run_t.gMouse  == 1){ 
       
-       LED_MOUSE_ON();    //mouse_led_onoff(1); //display fan of grass is two .
+       LED_MOUSE_ON();   
     }
 	 
-	  
+	 
     if(run_t.gDry==1 && gpro_t.g_manual_shutoff_dry_flag ==0 && gpro_t.smartphone_app_timer_power_on_flag==0){
 		 
 	    LED_DRY_ON();
       
      }
-	 else if(gpro_t.smartphone_app_timer_power_on_flag==0){
+	 else if((run_t.gDry==0 && gpro_t.smartphone_app_timer_power_on_flag==0)||(gpro_t.g_manual_shutoff_dry_flag ==1)){
 	   LED_DRY_OFF();
 
 	 }

@@ -34,9 +34,9 @@ void power_on_handler(void)
 	run_t.power_off_flag = 0;
 	
 
-	gpro_t.gTimer_total_works_two_hours =0;
+	
 
-	gpro_t.interval_works_ten_minutes_flag = 0;
+
 
  }
 
@@ -255,9 +255,9 @@ void power_off_run_handler(void)
          run_t.gTimer_detect_mb_receive_flag=0;
 
          
-         gpro_t.gTimer_total_works_two_hours =0;
+
          
-         gpro_t.interval_works_ten_minutes_flag =0;
+       
 		   
 		 
          //  Power_Off();
@@ -305,82 +305,5 @@ void power_off_run_handler(void)
 *
 *
 *******************************************************/
-void compare_temp_value(void)
-{
-    static uint8_t first_one_flag;
-
-	//if(gpro_t.gTimer_temp_compare_counter > 4){
-		
-	   // gpro_t.gTimer_temp_compare_counter =0;
-
-    switch(gpro_t.set_temp_value_success){
-
-	case 1:
-		
-	  if(gpro_t.set_up_temperature_value >run_t.gReal_humtemp[1]){ //PTC TURN ON
-        
-      //if(gpro_t.g_manual_shutoff_dry_flag == 0){ //allow open dry function 
-         run_t.gDry =1;
-    	
-         LED_DRY_ON();
-         SendData_Set_Command(dry_notice_cmd,0x01);//SendData_Set_Command(DRY_ON_NO_BUZZER);
-		 osDelay(5);
-		// }
-     }
-     else if((gpro_t.set_up_temperature_value -1) < run_t.gReal_humtemp[1]){
-
-		run_t.gDry =0;
-         LED_DRY_OFF();
-      
-    	 SendData_Set_Command(dry_notice_cmd,0x0);//SendData_Set_Command(DRY_OFF_NO_BUZZER);
-    	  osDelay(5);
-
-		 }
- 
-        
-   break;
-
-   case 0:
-
-
-   break;
-
-   }
-}
-
-/***********************************************************************
-*
-*Function Name: void works_run_two_hours_handler(void)
-*Function :by display pannel of calculate after send to main board 
-*
-*
-*************************************************************************/
-void works_run_two_hours_handler(void)
-{
-    if(gpro_t.gTimer_total_works_two_hours > 7200){
-       gpro_t.gTimer_total_works_two_hours =0;
-
-       gpro_t.interval_works_ten_minutes_flag = 1;
-
-
-
-    }
-
-    if(gpro_t.interval_works_ten_minutes_flag == 1){
-
-        if(gpro_t.gTimer_total_works_two_hours > 600){
-            gpro_t.gTimer_total_works_two_hours =0;
-            gpro_t.interval_works_ten_minutes_flag=0;
-
-
-        }
-
-
-    }
-	
-    
-
-
-}
 
 

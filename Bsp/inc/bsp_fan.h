@@ -10,7 +10,7 @@
 
 
 
-void display_icon_function(void);
+
 
 
 
