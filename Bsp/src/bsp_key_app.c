@@ -10,9 +10,8 @@
 
 KEY_T_TYPEDEF key_t;
 
-//void key_add_fun(void);
+static void handle_mode_key_long_press(void);
 
-//void key_dec_fun(void);
 
 uint8_t  set_temp_flag;
 
@@ -65,11 +64,7 @@ void set_temperature_value(int8_t delta)
         if (new_temp > 40) new_temp = 40;
    }
 
-	
-
-   
-
-    gpro_t.set_up_temperature_value = new_temp;
+	gpro_t.set_up_temperature_value = new_temp;
 
     run_t.set_temperature_decade_value = new_temp / 10;
     run_t.set_temperature_unit_value   = new_temp % 10;
@@ -329,21 +324,14 @@ void mode_key_handler(void)
 	if(MODEL_KEY_VALUE() == KEY_DOWN && gpro_t.mode_Key_long_counter < 200){
 		gpro_t.mode_Key_long_counter++;
 
-	    if(gpro_t.mode_Key_long_counter > 100 ){
-           
-              
-		
-		  gpro_t.mode_Key_long_counter=220;
-		  gpro_t.mode_key_shot_flag = 0x81;
-		  key_t.key_mode_flag=8;
-		   if(gpro_t.DMA_txComplete ==1){
+	    if( run_t.wifi_led_fast_blink==1 && gpro_t.mode_Key_long_counter > 20){
+	    	  handle_mode_key_long_press();
 
-		   gpro_t.DMA_txComplete=0;
-		   SendData_Buzzer();
-		   
-		   }
-		  // mode_key_long_fun();
-		   //return 0x81;
+
+	    }
+	    else if(gpro_t.mode_Key_long_counter > 100 &&  run_t.wifi_led_fast_blink==0){
+           
+          handle_mode_key_long_press();
 
 
 		}
@@ -360,11 +348,6 @@ void mode_key_handler(void)
 		   gpro_t.gTimer_disp_moke_switch=0;
 		   SendData_Buzzer();
 		   osDelay(5);
-		   
-		 //  mode_key_short_fun();
-
-          // return 0x05;
-        	
 
 	}
 	else if(MODEL_KEY_VALUE() == KEY_UP  && gpro_t.mode_Key_long_counter ==220){
@@ -375,6 +358,20 @@ void mode_key_handler(void)
 	//return 0;
 
 }
+
+// Helper function for long press actions
+static void handle_mode_key_long_press(void)
+{
+    gpro_t.mode_Key_long_counter = 220;
+    gpro_t.mode_key_shot_flag = 0x81;
+    key_t.key_mode_flag = 8;
+    
+    if (gpro_t.DMA_txComplete == 1) {
+        gpro_t.DMA_txComplete = 0;
+        SendData_Buzzer();
+    }
+}
+
 /****************************************************************
 	*
 	*Function Name :void wifi_mode_key_handler(void)
