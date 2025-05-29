@@ -75,6 +75,7 @@ void ProcessReceivedData(uint8_t *data, uint8_t length)
 //{
 //    HAL_DMA_IRQHandler(&hdma_usart1_rx);
 //}
+#if USART1_INTERRUPT
 
 
 // 新增函数：处理从DMA缓冲区提取的一帧完整数据
@@ -111,6 +112,7 @@ void HandleReceivedFrame(uint8_t *buffer, uint8_t length)
  * @brief UART DMA 
  * UART callback function接收回调函数（接收完成或空闲线中断触发）
  */
+
 void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
 {
     if (huart == &huart1) {
@@ -118,8 +120,11 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
            memcpy(g_msg.usData, dmaRxBuffer, g_msg.rx_data_counter);  // 复制到全局消息结构体
           vTaskDecoder_USART1_handler();
 
-        // 重新启动 DMA 接收
+        // 重新启动 DMA 
+        __HAL_UART_CLEAR_OREFLAG(&huart1);
         HAL_UARTEx_ReceiveToIdle_DMA(huart, dmaRxBuffer, sizeof(dmaRxBuffer));
     }
 }
+
+#endif 
 

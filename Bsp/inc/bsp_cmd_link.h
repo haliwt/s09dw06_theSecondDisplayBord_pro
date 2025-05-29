@@ -8,7 +8,7 @@
 //extern uint8_t inputBuf[MAX_BUFFER_SIZE];
 //extern uint8_t outputBuf[8];
 
-
+#define USART1_INTERRUPT        1
 
 typedef enum{
 

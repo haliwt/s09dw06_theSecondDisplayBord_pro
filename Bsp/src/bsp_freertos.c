@@ -128,15 +128,23 @@ static void vTaskDecoderPro(void *pvParameters)
 			if((ulValue & DECODER_BIT_9) != 0){
 
 			   
+				
+                #if USART1_INTERRUPT
+				gl_tMsg.disp_rx_cmd_done_flag = 0;
+
+				check_code =  bcc_check(gl_tMsg.usData,gl_tMsg.ulid);
+
+				if(check_code == gl_tMsg.bcc_check_code ){
+
+				receive_data_from_mainboard(gl_tMsg.usData);
+				}
+			    #else
 				g_msg.disp_rx_cmd_done_flag =0;//gl_tMsg.disp_rx_cmd_done_flag = 0;
+                check_code =  bcc_check(g_msg.usData,g_msg.ulid);
 
-				//check_code =  bcc_check(gl_tMsg.usData,gl_tMsg.ulid);
-				check_code =  bcc_check(g_msg.usData,g_msg.ulid);
-
-				//if(check_code == g_msg.bcc_check_code ){
-
-				receive_data_from_mainboard(g_msg.usData);
-				//}
+				 receive_data_from_mainboard(g_msg.usData);
+				 
+				#endif 
 				//memset(g_msg.usData,0,MAX_FRAME_SIZE);
 			    
 			}
@@ -341,7 +349,7 @@ void AppTaskCreate (void)
 	*Return Ref:NO
 	*
 *******************************************************************************/
-#if 0
+#if USART1_INTERRUPT
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
      static uint8_t state,rx_end_flag ;

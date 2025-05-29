@@ -7,7 +7,7 @@
 #define NO_DATA             0x00
 #define HAS_DATA            0x0F
 
-#define USART1_INTERRUPT        0
+
 
 volatile uint8_t transOngoingFlag; // UART传输标志
 uint8_t outputBuf[MAX_BUFFER_BUF];
