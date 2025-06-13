@@ -189,33 +189,22 @@ static void TM1639_Stop(void)
 
 static void TM1639_Write_OneByte(uint8_t data)
 {
-	uint8_t i; 
-	
-	for(i=0;i<8;i++){
-		
-	TM1639_CLK_SetLow();
-	 if(data & 0x01){
-	     TM1639_DIO_SetHigh();
-		   //HAL_Delay(5); //5ms
-	 }
-	 else{
-	     TM1639_DIO_SetLow();
-		  // HAL_Delay(5); //5ms
-	 
-	 }
-	
-    //Delay_I2C(150); // 这个延时式，显示4为，时间，像数码管流水灯式的显示。
-	 
-	 TM1639_CLK_SetHigh();
-	 data >>=1;//
-	
-   //  data = data >> 1;   //LSB is the first send 
-    // TM1639_CLK_SetHigh();
-     
-   }
-// HAL_Delay(2);
-// TM1639_CLK_SetLow();
-// TM1639_DIO_SetLow();
+	uint8_t i;
+    for(i = 0; i < 8; i++)
+    {
+        TM1639_CLK_SetLow();
+        //delay_us(2); //is big error .DATA.2025.06.13
+        
+        if(data & 0x01)
+            TM1639_DIO_SetHigh(); //写入数据 �?1�?
+        else
+            TM1639_DIO_SetLow(); //写入数据 �?0�?
+            
+       // delay_us(2);//is big error .DATA.2025.06.13
+        TM1639_CLK_SetHigh();
+       // delay_us(2);//is big error .DATA.2025.06.13
+        data >>= 1;
+    }
 }
 
 
@@ -602,10 +591,7 @@ void SmgBlink_Colon_Function(uint8_t twobit,uint8_t threebit,uint8_t sel)
 {
 
 
-   
-
-
-	TM1639_Start();
+     TM1639_Start();
 
     TM1639_Write_OneByte(0xCB);//0xC1H->GRID_2->BIT_2
   

@@ -54,7 +54,7 @@ void set_temperature_value(int8_t delta)
 
 	if(temperature_init_value == 0 && gpro_t.set_temp_value_success==0){
         temperature_init_value++;
-        gpro_t.set_up_temperature_value = (delta > 0) ? 20 : 40;
+        gpro_t.set_up_temperature_value = (delta > 0) ? 40 : 20;
 	    new_temp = gpro_t.set_up_temperature_value;
     }
 	else{

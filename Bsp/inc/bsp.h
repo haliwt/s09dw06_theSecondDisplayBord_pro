@@ -16,6 +16,7 @@
 #include "bsp_key.h"
 #include "bsp_led.h"
 #include "bsp_fan.h"
+#include "bsp_tm1639.h"
 #include "bsp_display_dynamic.h"
 #include "bsp_display.h"
 #include "interrupt_manager.h"

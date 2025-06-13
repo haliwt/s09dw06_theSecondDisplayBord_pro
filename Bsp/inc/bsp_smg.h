@@ -7,21 +7,21 @@
 #define TM1640_DIN_IO_IN()    {GPIOB->MODER&=0XFCFFFFFF;GPIOB->MODER|=0<<24;}  //0x00 input mode
 #define TM1640_DIN_IO_OUT()   {GPIOB->MODER&=0XFCFFFFFF;GPIOB->MODER|=1<<24;}   //0x01 output  mode 
 
-
+#if 0
 #define TM1639_STB_PIN                GPIO_PIN_4
 #define TM1639_DIO_PIN                GPIO_PIN_5
 #define TM1639_CLK_PIN                GPIO_PIN_6
 #define TM1639_GPIO                   GPIOA  
 
-#define TM1639_CLK_SetHigh()            HAL_GPIO_WritePin(TM1639_GPIO,TM1639_CLK_PIN,GPIO_PIN_SET)    // ����ߵ�ƽ
-#define TM1639_CLK_SetLow()             HAL_GPIO_WritePin(TM1639_GPIO,TM1639_CLK_PIN,GPIO_PIN_RESET)  // ����͵�ƽ
+#define TM1639_CLK_SetHigh()            HAL_GPIO_WritePin(TM1639_GPIO,TM1639_CLK_PIN,GPIO_PIN_SET)    // ����ߵ��?
+#define TM1639_CLK_SetLow()             HAL_GPIO_WritePin(TM1639_GPIO,TM1639_CLK_PIN,GPIO_PIN_RESET)  // ����͵��?
 
-#define TM1639_DIO_SetHigh()            HAL_GPIO_WritePin(TM1639_GPIO,TM1639_DIO_PIN,GPIO_PIN_SET)    // ����ߵ�ƽ
+#define TM1639_DIO_SetHigh()            HAL_GPIO_WritePin(TM1639_GPIO,TM1639_DIO_PIN,GPIO_PIN_SET)    // ����ߵ��?
 #define TM1639_DIO_SetLow()             HAL_GPIO_WritePin(TM1639_GPIO,TM1639_DIO_PIN,GPIO_PIN_RESET)    // output low level
 
 #define TM1639_STB_SetHigh()            HAL_GPIO_WritePin(TM1639_GPIO,TM1639_STB_PIN,GPIO_PIN_SET)
 #define TM1639_STB_SetLow()             HAL_GPIO_WritePin(TM1639_GPIO,TM1639_STB_PIN,GPIO_PIN_RESET)
-
+#endif 
 
 
 //extern volatile uint8_t DispData[3];//??LED??
@@ -87,12 +87,6 @@
 #define   seg_f  0x02      //SEG5   //seg_a = 0x01
 #define   seg_g  0x04      //SEG6   //seg_b = 0x02 
 #define   seg_h  0x08      //SEG7 -> ":"
-
-
-
-
-
-
 
 
 
