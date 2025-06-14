@@ -2,30 +2,30 @@
 
 // 数码管段码表�?0-9的显示码
 static const uint8_t TM1639_Number_Table[] = {
-    0xF3, // 0: 0011 1111   （f,e,d,c,b,a�?--0x3F
-    0x60, // 1: 0000 0110 --0x06--写数据式冲低位开始，向高位开始写
+    0xF3, // 0: 0011 1111 --0x3F  （h,g,f,e,d,c,b,a--0x3F
+    0x60, // 1: 0000 0110 --0x06--写数据式从低位开始，向高位开始写
     0xB5, // 2: 0101 1011 --0x5B
     0xF4, // 3: 0100 1111 --0x4F
-    0x66, // 4: 0110 0110
+    0x66, // 4: 0110 0110 --0x66
     0xD6, // 5: 0110 1101 --0x6D
     0xD7, // 6: 0111 1101  --0x7D 
-    0x70, // 7: 0000 0111
-    0xF7, // 8: 0111 1111
-    0xF6  // 9: 0110 1111
+    0x70, // 7: 0000 0111  --0x07
+    0xF7, // 8: 0111 1111  --0x7F
+    0xF6  // 9: 0110 1111  --0x6F
 };
 
 // 字母和特殊字符显示码
 static const uint8_t TM1639_Char_Table[] = {
-    0x67, // H: 0111 0110 (b,c,e,f,g)
-    0x36, // °: 0110 0011 (b,c,g)
-    0x93, // C: 0011 1001 (a,d,e,f)
+    0x67, // H: 0111 0110 (h,g,f,e,d,c,b,a)
+    0x36, // °: 0110 0011 (h,g,f,e,d,c,b,a)
+    0x93, // C: 0011 1001 (h,g,f,e,d,c,b,a)
     0x05  // RH的H部分: 0101 0000 (e,g)
 };
 
-#define TM1639_CHAR_H TM1639_Char_Table[0]
-#define TM1639_CHAR_DEGREE TM1639_Char_Table[1]
-#define TM1639_CHAR_C TM1639_Char_Table[2]
-#define TM1639_CHAR_RH TM1639_Char_Table[3]
+#define TM1639_CHAR_H 				TM1639_Char_Table[0]
+#define TM1639_CHAR_DEGREE 			TM1639_Char_Table[1]
+#define TM1639_CHAR_C 				TM1639_Char_Table[2]
+#define TM1639_CHAR_RH 				TM1639_Char_Table[3]
 
 #define TM1639_DOT 0x08 // 小数点段�?,from low position start
 
@@ -155,6 +155,33 @@ void TM1639_Write_Digit_Full(uint8_t addr_h, uint8_t addr_l, uint8_t data)
 }
 
 /**
+ * @brief  关闭�?有显示（包括数码管和LED�?
+ * @param  None
+ * @retval None
+ */
+void TM1639_All_Off(void)
+{
+    // 关闭数码管显示（GRID1-GRID3�?
+    TM1639_Write_Digit_Full(TM1639_ADDR_DIG1_H, TM1639_ADDR_DIG1_L, 0x00);
+    TM1639_Write_Digit_Full(TM1639_ADDR_DIG2_H, TM1639_ADDR_DIG2_L, 0x00);
+    TM1639_Write_Digit_Full(TM1639_ADDR_DIG3_H, TM1639_ADDR_DIG3_L, 0x00);
+
+    // 关闭LED显示（GRID4-GRID8�?
+    TM1639_Write_Digit_Full(TM1639_ADDR_GRID4_H, TM1639_ADDR_GRID4_L, 0x00);
+    TM1639_Write_Digit_Full(TM1639_ADDR_GRID5_H, TM1639_ADDR_GRID5_L, 0x00);
+    TM1639_Write_Digit_Full(TM1639_ADDR_GRID6_H, TM1639_ADDR_GRID6_L, 0x00);
+    TM1639_Write_Digit_Full(TM1639_ADDR_GRID7_H, TM1639_ADDR_GRID7_L, 0x00);
+    TM1639_Write_Digit_Full(TM1639_ADDR_GRID8_H, TM1639_ADDR_GRID8_L, 0x00);
+
+    // 关闭显示
+    TM1639_Display_ON_OFF(TM1639_DISPLAY_OFF);
+}
+
+
+
+
+#if 0
+/**
  * @brief  写入半个�?位数码管（包括高4位或�?4位）
  * @param  addr_h: �?4位地�?
  * @param  addr_l: �?4位地�?
@@ -173,8 +200,6 @@ void TM1639_Write_Half_Digit(uint8_t addr, uint8_t data)
     
   
 }
-
-#if 0
 /**
  * @brief  显示3位数�?
  * @param  num: 要显示的数字(0-999)
@@ -318,28 +343,7 @@ void TM1639_Display_H(uint8_t position)
     TM1639_Stop();
 }
 
-/**
- * @brief  关闭�?有显示（包括数码管和LED�?
- * @param  None
- * @retval None
- */
-void TM1639_All_Off(void)
-{
-    // 关闭数码管显示（GRID1-GRID3�?
-    TM1639_Write_Digit_Full(TM1639_ADDR_DIG1_H, TM1639_ADDR_DIG1_L, 0x00);
-    TM1639_Write_Digit_Full(TM1639_ADDR_DIG2_H, TM1639_ADDR_DIG2_L, 0x00);
-    TM1639_Write_Digit_Full(TM1639_ADDR_DIG3_H, TM1639_ADDR_DIG3_L, 0x00);
-    
-    // 关闭LED显示（GRID4-GRID8�?
-    TM1639_Write_Digit_Full(TM1639_ADDR_GRID4_H, TM1639_ADDR_GRID4_L, 0x00);
-    TM1639_Write_Digit_Full(TM1639_ADDR_GRID5_H, TM1639_ADDR_GRID5_L, 0x00);
-    TM1639_Write_Digit_Full(TM1639_ADDR_GRID6_H, TM1639_ADDR_GRID6_L, 0x00);
-    TM1639_Write_Digit_Full(TM1639_ADDR_GRID7_H, TM1639_ADDR_GRID7_L, 0x00);
-    TM1639_Write_Digit_Full(TM1639_ADDR_GRID8_H, TM1639_ADDR_GRID8_L, 0x00);
-    
-    // 关闭显示
-    TM1639_Display_ON_OFF(TM1639_DISPLAY_OFF);
-}
+
 
 /**
  * @brief  显示小数�?

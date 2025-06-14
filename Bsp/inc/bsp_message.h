@@ -95,7 +95,7 @@ typedef enum{
 	wifi_connect_data= 0x1F,
 	dry_notice_cmd= 0x22, //don't sound
 	mainboard_set_temperature_value = 0x2A,
-	mainboard_set_timer_value= 0x4C,
+	mainboard_set_timer_value= 0x2B,
 	timer_time_sync= 0x5C, //one timer timing and second timer timing timer timing synchronization
 	copy_cmd = 0xff
 
@@ -107,7 +107,7 @@ typedef enum{
 void receive_data_from_mainboard(uint8_t *pdata);
 
 
-void send_cmd_ack_hanlder(void);
+
 
 uint8_t bcc_check(const unsigned char *data, int len);
 
